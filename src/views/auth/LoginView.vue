@@ -117,6 +117,7 @@ function onClick() {
                             color="yellow-lighten-2"
                             class="font-weight-bold mt-4 rounded-pill mx-auto pa-6"
                             type="submit"
+                            prepend-icon="mdi-google"
                             block
                             >Sing in with Google</v-btn
                           >
@@ -124,7 +125,8 @@ function onClick() {
                         <v-divider class="my-5"></v-divider>
 
                         <h5 class="text-center font-light" style="font-size: 18px">
-                          Don't have an account? REGISTER
+                          Don't have an account?
+                          <RouterLink to="/register" class="register-button"> REGISTER</RouterLink>
                         </h5>
                       </v-form>
                     </v-card-text>
@@ -164,7 +166,12 @@ function onClick() {
   width: 100%;
 }
 .register-button {
-  color: black;
   text-decoration: none;
+}
+.theme--light .register-button {
+  color: black;
+}
+.theme--dark .register-button {
+  color: white;
 }
 </style>
