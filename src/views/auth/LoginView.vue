@@ -24,7 +24,7 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/')`,
+            backgroundImage: `url('/public/images/wiggle.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
@@ -35,7 +35,7 @@ function onClick() {
             <v-container>
               <v-row>
                 <v-col cols="12" md="6" class="mx-auto">
-                  <v-card class="mx-auto elevation-10" :bg-color="yellow - lighten - 5">
+                  <v-card class="mx-auto elevation-10">
                     <v-row class="d-flex justify-center my-6">
                       <v-col cols="12" md="6" class="d-flex justify-center align-center">
                         <v-img
@@ -49,9 +49,7 @@ function onClick() {
 
                     <h1 class="text-center" style="font-size: 40px">Welcome to</h1>
                     <h2 class="text-center" style="font-size: 60px">EASY BORROW</h2>
-                    <h3 class="text-center" style="font-size: 20px">
-                      Share smarter, earn faster.>
-                    </h3>
+                    <h3 class="text-center" style="font-size: 20px">Share smarter, earn faster</h3>
 
                     <v-spacer class="my-5"></v-spacer>
 
@@ -60,24 +58,39 @@ function onClick() {
                         <v-text-field
                           label="Email"
                           variant="outlined"
-                          bg-color="yellow-darken-1 rounded-lg"
+                          bg-color="yellow-lighten-1 rounded-lg elevation-5"
                         ></v-text-field>
 
                         <v-text-field
                           type="password"
                           label="Password"
                           variant="outlined"
-                          bg-color="yellow-darken-1 rounded-lg"
+                          bg-color="yellow-lighten-1 rounded-lg elevation-5"
                         ></v-text-field>
-
+                        <h4 class="text-center font-weight-medium" style="font-size: 15px">
+                          Forgot Password?
+                        </h4>
                         <v-btn
                           size="large"
                           color="yellow-lighten-2"
-                          class="font-weight-bold mt-4 rounded-pill"
+                          class="font-weight-bold mt-4 rounded-pill elevation-10"
                           type="submit"
                           block
-                          >Submit</v-btn
+                          >LOGIN AS</v-btn
                         >
+                        <v-btn
+                          size="large"
+                          color="yellow-lighten-2"
+                          class="font-weight-bold mt-4 rounded-pill elevation-10"
+                          type="submit"
+                          block
+                          >Sing in with Google</v-btn
+                        >
+                        <v-divider class="my-5"></v-divider>
+
+                        <h5 class="text-center font-weight-medium" style="font-size: 18px">
+                          Don't have an account? REGISTER
+                        </h5>
                       </v-form>
                     </v-card-text>
                   </v-card>

@@ -24,7 +24,7 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/background.jpg)`,
+            backgroundImage: `url('/public/images/image.png)`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
@@ -50,21 +50,17 @@ function onClick() {
 
 <style scoped>
 .light-background {
-  background-image: url('/public/images/background.jpg');
+  background-image: url('/public/images/image.png');
   background-size: cover;
   background-position: center;
 }
 
 .dark-background {
-  background-image: url('/public/images/background.jpg');
+  background-image: url('/public/images/image.png');
   background-size: cover;
   background-position: center;
 }
 .back-button {
-  color: black;
-  text-decoration: none;
-}
-.login-button {
   color: black;
   text-decoration: none;
 }

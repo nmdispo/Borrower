@@ -23,7 +23,7 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/')`,
+            backgroundImage: `url('/public/images/wewe.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
