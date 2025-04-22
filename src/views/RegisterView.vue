@@ -115,7 +115,7 @@ function onClick() {
                           class="font-weight-bold mt-4 rounded-pill mx-auto pa-6"
                           type="submit"
                           block
-                          ><RouterLink to="/" class="link-button">REGISTER</RouterLink></v-btn
+                          ><RouterLink to="/" class="link-button">REGISTER now</RouterLink></v-btn
                         >
                       </v-hover>
 

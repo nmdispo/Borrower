@@ -24,24 +24,32 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/background.jpg)`,
+            backgroundImage: `url('/public/images/wiggle.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
         >
           <v-divider class="my-10"></v-divider>
-          <v-btn prepend-icon="mdi-arrow-left-circle" width="200"
-            ><RouterLink to="/" class="back-button">BACK</RouterLink></v-btn
-          >
-          <v-container>
-            <v-row class="d-flex justify-center">
-              <v-col cols="12" md="6" class="d-flex justify-center align-center">
-                <h1 class="text-center" style="font-size: 40px">Welcome to Easy Borrow</h1>
-              </v-col>
-            </v-row>
-            <p class="text-center">DASHBOARD</p>
-          </v-container>
-          <v-spacer class="my-5"></v-spacer>
+
+          <v-main>
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-card class="mx-auto" prepend-icon="$vuetify" subtitle="The #1 Vue UI Library">
+                    <template v-slot:title>
+                      <span class="font-weight-black">Welcome to Vuetify</span>
+                    </template>
+
+                    <v-card-text class="bg-surface-light pt-4">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione
+                      debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat
+                      totam, magni doloremque veniam neque porro libero rerum unde voluptatem!
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-main>
         </v-app>
       </v-responsive>
     </v-app>
@@ -50,13 +58,13 @@ function onClick() {
 
 <style scoped>
 .light-background {
-  background-image: url('/public/images/background.jpg');
+  background-image: url('/public/images/wiggle.png');
   background-size: cover;
   background-position: center;
 }
 
 .dark-background {
-  background-image: url('/public/images/background.jpg');
+  background-image: url('/public/images/bg.jpg');
   background-size: cover;
   background-position: center;
 }
