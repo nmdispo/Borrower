@@ -30,26 +30,6 @@ function onClick() {
           }"
         >
           <v-divider class="my-10"></v-divider>
-
-          <v-main>
-            <v-container>
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-card class="mx-auto" prepend-icon="$vuetify" subtitle="The #1 Vue UI Library">
-                    <template v-slot:title>
-                      <span class="font-weight-black">Welcome to Vuetify</span>
-                    </template>
-
-                    <v-card-text class="bg-surface-light pt-4">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione
-                      debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat
-                      totam, magni doloremque veniam neque porro libero rerum unde voluptatem!
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-main>
         </v-app>
       </v-responsive>
     </v-app>
