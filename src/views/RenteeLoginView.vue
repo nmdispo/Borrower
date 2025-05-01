@@ -2,34 +2,28 @@
 import { ref } from 'vue'
 
 const theme = ref('light')
-
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
 </script>
 
 <template>
   <v-responsive class="border rounded">
     <v-app :theme="theme">
-      <v-app-bar class="px-3">
-        <v-spacer></v-spacer>
-
-        <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          slim
-          @click="onClick"
-        ></v-btn>
-      </v-app-bar>
+      <v-spacer class="my-8"></v-spacer>
+      <v-img
+        tyle="position: relative; left: 20px;"
+        :width="200"
+        aspect-ratio="16/0"
+        cover
+        src="./images/EBlogo.png"
+      ></v-img>
       <v-responsive class="border rounded">
-        <v-app
-          :theme="theme"
-          :style="{
-            backgroundImage: `url('/public/images/wiggle.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }"
-        >
-          <v-divider class="my-10"></v-divider>
+        <v-app>
+          <v-main>
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="6"> </v-col>
+              </v-row>
+            </v-container>
+          </v-main>
         </v-app>
       </v-responsive>
     </v-app>

@@ -6,8 +6,8 @@ const router = useRouter()
 
 const theme = ref('light')
 const menuItems = ref([
-  { title: 'RENTEE', route: '/renteedashboard' },
-  { title: 'RENTER', route: '/renterdashboard' },
+  { title: 'RENTEE', route: '/renteelogin' },
+  { title: 'RENTER', route: '/renterlogin' },
 ])
 
 function onClick() {
@@ -55,8 +55,8 @@ function onClick() {
                     </v-row>
 
                     <h1 class="text-center" style="font-size: 40px">Welcome to</h1>
-                    <h2 class="text-center" style="font-size: 60px">EASY BORROW</h2>
-                    <h3 class="text-center" style="font-size: 20px">Share smarter, earn faster</h3>
+                    <h2 class="text-center" style="font-size: 70px">EASY BORROW</h2>
+                    <h3 class="text-center" style="font-size: 20px">Share smarter, Earn faster</h3>
 
                     <v-spacer class="my-5"></v-spacer>
 
@@ -96,6 +96,8 @@ function onClick() {
                               </v-btn>
                             </template>
 
+                            <v-spacer class="my-5"></v-spacer>
+
                             <v-list class="text-center" bg-color="yellow-lighten-2 rounded-xl">
                               <v-list-item
                                 v-for="(item, index) in menuItems"
@@ -109,19 +111,6 @@ function onClick() {
                           </v-menu>
                         </div>
 
-                        <v-hover v-slot="{ isHovering, props }">
-                          <v-btn
-                            v-bind="props"
-                            :elevation="isHovering ? 24 : 6"
-                            size="large"
-                            color="yellow-lighten-2"
-                            class="font-weight-bold mt-4 rounded-pill mx-auto pa-6"
-                            type="submit"
-                            prepend-icon="mdi-google"
-                            block
-                            >Sing in with Google</v-btn
-                          >
-                        </v-hover>
                         <v-divider class="my-5"></v-divider>
 
                         <h5 class="text-center font-light" style="font-size: 18px">

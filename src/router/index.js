@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/auth/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import RenteeDashboardView from '@/views/RenteeDashboardView.vue'
-import RenterDashboardView from '@/views/RenterDashboardView.vue'
+import RenteeDashboardView from '@/views/RenteeLoginView.vue'
+import RenterDashboardView from '@/views/RenterLoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 
 const router = createRouter({
@@ -19,13 +19,13 @@ const router = createRouter({
       component: RegisterView,
     },
     {
-      path: '/renteedashboard',
-      name: 'renteedashboard',
+      path: '/renteelogin',
+      name: 'renteelogin',
       component: RenteeDashboardView,
     },
     {
-      path: '/renterdashboard',
-      name: 'renterdashboard',
+      path: '/renterlogin',
+      name: 'renterlogin',
       component: RenterDashboardView,
     },
     {

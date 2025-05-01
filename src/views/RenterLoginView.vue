@@ -23,7 +23,7 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/wiggle.png')`,
+            backgroundImage: `url('/public/images/yellowback.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
@@ -57,12 +57,12 @@ function onClick() {
                       <v-row class="d-flex">
                         <v-col cols="12">
                           <v-text-field
-                            label="School ID/ Username"
+                            label="School ID"
                             variant="outlined"
                             bg-color="yellow-lighten-1 rounded-lg"
                           ></v-text-field>
 
-                          <v-checkbox label="Remember username"></v-checkbox>
+                          <v-checkbox label="Remember School ID"></v-checkbox>
 
                           <v-hover v-slot="{ isHovering, props }">
                             <v-btn

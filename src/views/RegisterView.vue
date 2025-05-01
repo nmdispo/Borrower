@@ -23,7 +23,7 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/wiggle.png')`,
+            backgroundImage: `url('/public/images/yellowback.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
@@ -115,7 +115,7 @@ function onClick() {
                           class="font-weight-bold mt-4 rounded-pill mx-auto pa-6"
                           type="submit"
                           block
-                          ><RouterLink to="/" class="link-button">REGISTER now</RouterLink></v-btn
+                          ><RouterLink to="/" class="link-button">REGISTER NOW</RouterLink></v-btn
                         >
                       </v-hover>
 
