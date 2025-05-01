@@ -13,6 +13,35 @@ const menuItems = ref([
 function onClick() {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
 }
+
+// Password logic
+const actualPassword = ref('')
+const maskedPassword = ref('')
+let revealTimeout
+
+function onPasswordInput(e) {
+  const newChar = e.data || '' // last character typed
+  const newValue = e.target.value
+
+  // If user deletes
+  if (newValue.length < actualPassword.value.length) {
+    actualPassword.value = newValue
+    maskedPassword.value = '•'.repeat(newValue.length)
+    return
+  }
+
+  // Update actual password
+  actualPassword.value += newChar
+
+  // Mask all but the last char
+  maskedPassword.value = '•'.repeat(actualPassword.value.length - 1) + newChar
+
+  // Re-mask the last character after 1 second
+  clearTimeout(revealTimeout)
+  revealTimeout = setTimeout(() => {
+    maskedPassword.value = '•'.repeat(actualPassword.value.length)
+  }, 1000)
+}
 </script>
 
 <template>
@@ -68,12 +97,15 @@ function onClick() {
                           bg-color="yellow-lighten-1 rounded-lg elevation-5"
                         ></v-text-field>
 
+                        <!-- Custom password field -->
                         <v-text-field
-                          type="password"
+                          :value="maskedPassword"
                           label="Password"
                           variant="outlined"
                           bg-color="yellow-lighten-1 rounded-lg elevation-5"
+                          @input="onPasswordInput"
                         ></v-text-field>
+
                         <h4 class="text-center font-semibold" style="font-size: 15px">
                           Forgot Password?
                         </h4>
