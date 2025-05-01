@@ -31,7 +31,7 @@ function onClick() {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/wiggle.png')`,
+            backgroundImage: `url('/public/images/yellowback.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
@@ -143,13 +143,13 @@ function onClick() {
 
 <style scoped>
 .light-background {
-  background-image: url('/public/images/background.jpg');
+  background-image: url('/public/images/yellowback.jpg');
   background-size: cover;
   background-position: center;
 }
 
 .dark-background {
-  background-image: url('/public/images/background.jpg');
+  background-image: url('/public/images/yellowback.jpg');
   background-size: cover;
   background-position: center;
 }
