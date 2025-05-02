@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const theme = ref('light')
+const email = ref('')
+
 const menuItems = ref([
   { title: 'RENTEE', route: '/renteelogin' },
   { title: 'RENTER', route: '/renterlogin' },
@@ -14,29 +16,36 @@ function onClick() {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
 }
 
+// Validate email and login
+function handleLogin(route) {
+  if (!email.value.includes('@') || !email.value.includes('.com')) {
+    alert('Please enter a valid email that contains "@" and ".com"')
+    return
+  }
+
+  const namePart = email.value.split('@')[0]
+  localStorage.setItem('userEmail', namePart)
+  router.push(route)
+}
+
 // Password logic
 const actualPassword = ref('')
 const maskedPassword = ref('')
 let revealTimeout
 
 function onPasswordInput(e) {
-  const newChar = e.data || '' // last character typed
+  const newChar = e.data || ''
   const newValue = e.target.value
 
-  // If user deletes
   if (newValue.length < actualPassword.value.length) {
     actualPassword.value = newValue
     maskedPassword.value = '•'.repeat(newValue.length)
     return
   }
 
-  // Update actual password
   actualPassword.value += newChar
-
-  // Mask all but the last char
   maskedPassword.value = '•'.repeat(actualPassword.value.length - 1) + newChar
 
-  // Re-mask the last character after 1 second
   clearTimeout(revealTimeout)
   revealTimeout = setTimeout(() => {
     maskedPassword.value = '•'.repeat(actualPassword.value.length)
@@ -49,13 +58,13 @@ function onPasswordInput(e) {
     <v-app :theme="theme">
       <v-app-bar class="px-3">
         <v-spacer></v-spacer>
-
         <v-btn
           :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
           slim
           @click="onClick"
         ></v-btn>
       </v-app-bar>
+
       <v-responsive class="border rounded">
         <v-app
           :theme="theme"
@@ -91,13 +100,15 @@ function onPasswordInput(e) {
 
                     <v-card-text class="pt-4">
                       <v-form fast-fail @submit.prevent>
+                        <!-- EMAIL INPUT -->
                         <v-text-field
+                          v-model="email"
                           label="Email"
                           variant="outlined"
                           bg-color="yellow-lighten-1 rounded-lg elevation-5"
                         ></v-text-field>
 
-                        <!-- Custom password field -->
+                        <!-- PASSWORD INPUT -->
                         <v-text-field
                           :value="maskedPassword"
                           label="Password"
@@ -112,6 +123,7 @@ function onPasswordInput(e) {
 
                         <v-spacer class="my-10"></v-spacer>
 
+                        <!-- LOGIN MENU -->
                         <div class="text-center">
                           <v-menu open-on-click>
                             <template v-slot:activator="{ isHovering, props }">
@@ -135,7 +147,7 @@ function onPasswordInput(e) {
                                 v-for="(item, index) in menuItems"
                                 :key="index"
                                 :value="item"
-                                @click="router.push(item.route)"
+                                @click="handleLogin(item.route)"
                               >
                                 <v-list-item-title>{{ item.title }}</v-list-item-title>
                               </v-list-item>
@@ -147,7 +159,7 @@ function onPasswordInput(e) {
 
                         <h5 class="text-center font-light" style="font-size: 18px">
                           Don't have an account?
-                          <RouterLink to="/register" class="register-button"> REGISTER</RouterLink>
+                          <RouterLink to="/register" class="register-button"> REGISTER </RouterLink>
                         </h5>
                       </v-form>
                     </v-card-text>
@@ -163,28 +175,11 @@ function onPasswordInput(e) {
 </template>
 
 <style scoped>
-.light-background {
-  background-image: url('/public/images/yellowback.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
+.light-background,
 .dark-background {
   background-image: url('/public/images/yellowback.jpg');
   background-size: cover;
   background-position: center;
-}
-.rentee-button {
-  color: black;
-  text-decoration: none;
-  display: block;
-  width: 100%;
-}
-.renter-button {
-  color: black;
-  text-decoration: none;
-  display: block;
-  width: 100%;
 }
 .register-button {
   text-decoration: none;

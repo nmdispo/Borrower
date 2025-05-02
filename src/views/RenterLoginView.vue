@@ -1,9 +1,29 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const theme = ref('light')
+const schoolId = ref('')
+const router = useRouter()
+
 function onClick() {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
+}
+
+// Only allow numbers and dashes
+function onSchoolIdInput(event) {
+  const input = event.target.value
+  schoolId.value = input.replace(/[^0-9-]/g, '')
+}
+
+// Handle login with validation
+function handleLogin() {
+  if (!schoolId.value) {
+    alert('Please enter your School ID.')
+    return
+  }
+
+  router.push('/renterdashboard')
 }
 </script>
 
@@ -12,13 +32,13 @@ function onClick() {
     <v-app :theme="theme">
       <v-app-bar class="px-3">
         <v-spacer></v-spacer>
-
         <v-btn
           :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
           slim
           @click="onClick"
         ></v-btn>
       </v-app-bar>
+
       <v-responsive class="border rounded">
         <v-app
           :theme="theme"
@@ -48,7 +68,7 @@ function onClick() {
 
                     <h1 class="text-center" style="font-size: 40px">Welcome to</h1>
                     <h2 class="text-center" style="font-size: 60px">EASY BORROW</h2>
-                    <h3 class="text-center" style="font-size: 20px">Share smarter, earn faster</h3>
+                    <h3 class="text-center" style="font-size: 20px">Share smarter, Earn faster</h3>
 
                     <v-spacer class="my-5"></v-spacer>
                     <v-divider class="my-5"></v-divider>
@@ -56,13 +76,14 @@ function onClick() {
                     <v-container>
                       <v-row class="d-flex">
                         <v-col cols="12">
+                          <!-- School ID input with restrictions -->
                           <v-text-field
+                            v-model="schoolId"
+                            @input="onSchoolIdInput"
                             label="School ID"
                             variant="outlined"
                             bg-color="yellow-lighten-1 rounded-lg"
                           ></v-text-field>
-
-                          <v-checkbox label="Remember School ID"></v-checkbox>
 
                           <v-hover v-slot="{ isHovering, props }">
                             <v-btn
@@ -71,10 +92,11 @@ function onClick() {
                               size="large"
                               color="yellow-lighten-2"
                               class="font-weight-bold mt-4 rounded-pill mx-auto pa-6"
-                              type="submit"
+                              @click="handleLogin"
                               block
-                              ><RouterLink to="/" class="login-button">login now</RouterLink></v-btn
                             >
+                              login now
+                            </v-btn>
                           </v-hover>
 
                           <v-divider class="my-5"></v-divider>
@@ -93,12 +115,7 @@ function onClick() {
 </template>
 
 <style scoped>
-.light-background {
-  background-image: url('/public/images/background.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
+.light-background,
 .dark-background {
   background-image: url('/public/images/background.jpg');
   background-size: cover;
