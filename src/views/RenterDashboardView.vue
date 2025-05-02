@@ -32,7 +32,7 @@ const currentRentals = ref([
 
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
-  userFirstName.value = storedName ? storedName : 'Ella'
+  userFirstName.value = storedName ? storedName : 'User'
 })
 
 function navigateTo(path) {
