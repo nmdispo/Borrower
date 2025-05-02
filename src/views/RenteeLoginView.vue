@@ -9,36 +9,72 @@ const route = useRoute()
 const userFirstName = ref('')
 
 // Sample rental data
-const currentRentals = ref([
+const valueRentals = ref([
   {
     name: 'Electric Drill',
     image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 1–10, 2025',
-    fee: '₱750.00',
   },
   {
     name: 'Mountain Bike',
     image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 3–8, 2025',
-    fee: '₱1,350.00',
+  },
+  {
+    name: 'Prom Dress',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Rain Boots',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'E-bikes',
+    image: '/images/sample-item.jpg',
+  },
+])
+
+const nearbyRentals = ref([
+  {
+    name: 'Filipiniana',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Chemistry Book',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Karaoke Machine',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Chairs & Tables',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Vans',
+    image: '/images/sample-item.jpg',
+  },
+])
+
+const availabilityRentals = ref([
+  {
+    name: 'Laboratory Gown',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Scientific Calculator',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Arnis Stick',
+    image: '/images/sample-item.jpg',
   },
   {
     name: 'Tent 4-Person',
     image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 5–12, 2025',
-    fee: '₱900.00',
   },
   {
-    name: 'Tent 4-Person',
+    name: 'Safety Vest ',
     image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 5–12, 2025',
-    fee: '₱900.00',
-  },
-  {
-    name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 5–12, 2025',
-    fee: '₱900.00',
   },
 ])
 
@@ -77,8 +113,8 @@ function onClick() {
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/rentals' }"
-                  @click="navigateTo('/rentals')"
+                  :class="{ active: route.path === '' }"
+                  @click="navigateTo('')"
                   >Rentals</v-btn
                 >
                 <v-btn
@@ -101,7 +137,7 @@ function onClick() {
         </v-row>
 
         <v-container justify="center" align="center" class="mb-6 py-6">
-          <v-sheet class="navigation-container px-5 py-1" color="white">
+          <v-sheet class="navigation-container px-1 py-1" color="white">
             <v-row align="center" no-gutters>
               <v-col>
                 <v-text-field
@@ -149,16 +185,131 @@ function onClick() {
           </v-row>
 
           <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="2" v-for="(rental, index) in currentRentals" :key="index">
+            <v-col cols="12" sm="6" md="2" v-for="(rental, index) in valueRentals" :key="index">
               <v-card class="rental-card pa-5" elevation="3">
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <div><strong>Rental Date:</strong> {{ rental.rentalPeriod }}</div>
-                  <div><strong>Rental Fee:</strong> {{ rental.fee }}</div>
+                  <div>
+                    <v-btn
+                      color="yellow-lighten-2"
+                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
+                      type="submit"
+                      block
+                      >View price
+                    </v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
+          </v-row>
+
+          <v-row justify="start" class="mb-6">
+            <h2 class="section-title" style="padding-left: 50px">Nearby Rentals</h2>
+          </v-row>
+
+          <v-row justify="center" class="mt-4" dense>
+            <v-col cols="12" sm="6" md="2" v-for="(rental, index) in nearbyRentals" :key="index">
+              <v-card class="rental-card pa-5" elevation="3">
+                <v-img :src="rental.image" height="160" cover></v-img>
+                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
+                <v-card-text class="rental-info">
+                  <div>
+                    <v-btn
+                      color="yellow-lighten-2"
+                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
+                      type="submit"
+                      block
+                      >View location
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h2 class="section-title" style="padding-left: 50px">Availability</h2>
+          </v-row>
+
+          <v-row justify="center" class="mt-4" dense>
+            <v-col
+              cols="12"
+              sm="6"
+              md="2"
+              v-for="(rental, index) in availabilityRentals"
+              :key="index"
+            >
+              <v-card class="rental-card pa-5" elevation="3">
+                <v-img :src="rental.image" height="160" cover></v-img>
+                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
+                <v-card-text class="rental-info">
+                  <div>
+                    <v-btn
+                      color="yellow-lighten-2"
+                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
+                      type="submit"
+                      block
+                      >View availability
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <v-spacer class="my-15"> </v-spacer>
+          <v-row justify="center" class="mb-8">
+            <div
+              class="custom-divider mx-auto"
+              style="border-top: 3px solid black; width: 95%"
+            ></div>
+          </v-row>
+
+          <v-row justify="start" class="mb-6">
+            <h2 class="section-title" style="padding-left: 50px">Location/ Proximity</h2>
+          </v-row>
+
+          <v-container justify="center" align="center" class="mb-12 py-7">
+            <v-sheet class="nav-location-container px-1 py-1" color="white">
+              <v-row align="center" no-gutters>
+                <v-col>
+                  <v-text-field
+                    :loading="loading"
+                    append-inner-icon="mdi-magnify"
+                    density="compact"
+                    label="Search templates"
+                    variant="solo"
+                    hide-details
+                    single-line
+                    @click:append-inner="onClick"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-sheet>
+          </v-container>
+          <v-row justify="center" class="mb-6">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d252277.09233639718!2d125.28706327918034!3d8.895432417676176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3301e998b1704fcf%3A0x85e95810384ea2d6!2sButuan%20City%2C%20Agusan%20Del%20Norte!5e0!3m2!1sen!2sph!4v1746198760012!5m2!1sen!2sph"
+              width="80%"
+              height="500"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </v-row>
+
+          <v-row justify="center" class="mb-8">
+            <p class="welcome-text">
+              Click the red location pins to know how far is the rental from your location.
+            </p>
+          </v-row>
+
+          <v-row justify="center" class="mb-8">
+            <div
+              class="custom-divider mx-auto"
+              style="border-top: 3px solid black; width: 95%"
+            ></div>
           </v-row>
         </div>
       </v-container>
@@ -171,15 +322,20 @@ function onClick() {
 
 .nav-container {
   border: 3px solid #ffd700;
-  border-radius: 15px;
+  border-radius: 10px;
   display: inline-block;
   width: fit-content;
 }
 .navigation-container {
   border: 3px solid #ffd700;
-  border-radius: 15px;
-
-  max-width: 800px; /* Increased max-width to make it longer */
+  border-radius: 10px;
+  max-width: 730px;
+  width: 100%;
+}
+.nav-location-container {
+  border: 3px solid #ffd700;
+  border-radius: 10px;
+  max-width: 800px;
   width: 100%;
 }
 .nav-btn {
@@ -205,7 +361,7 @@ function onClick() {
   background-color: #fff170;
   min-height: 100vh;
   padding: 40px;
-  border-radius: 150px;
+  border-radius: 16px;
 }
 .hello-text {
   font-size: 50px;
