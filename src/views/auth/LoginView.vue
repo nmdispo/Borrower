@@ -1,8 +1,29 @@
 <script setup>
+import { requiredValidator, emailValidator } from '@/utils/validators'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const refVForm = ref()
+
+const formDataDefault = {
+  email: '',
+  password: '',
+}
+
+const formData = ref({
+  ...formDataDefault,
+})
+
+const onLogin = () => {
+  alert(formData.value)
+}
+
+const onFormSubmit = () => {
+  refVForm.value?.validate().then(({ valid }) => {
+    if (valid) onLogin()
+  })
+}
 
 const theme = ref('light')
 const menuItems = ref([
@@ -90,8 +111,10 @@ function onPasswordInput(e) {
                     <v-spacer class="my-5"></v-spacer>
 
                     <v-card-text class="pt-4">
-                      <v-form fast-fail @submit.prevent>
+                      <v-form ref="refVForm" fast-fail @submit.prevent="onFormSubmit">
                         <v-text-field
+                          v-model="formData.email"
+                          :rules="[requiredValidator, emailValidator]"
                           label="Email"
                           variant="outlined"
                           bg-color="yellow-lighten-1 rounded-lg elevation-5"
@@ -99,6 +122,8 @@ function onPasswordInput(e) {
 
                         <!-- Custom password field -->
                         <v-text-field
+                          v-model="formData.password"
+                          :rules="[requiredValidator]"
                           :value="maskedPassword"
                           label="Password"
                           variant="outlined"

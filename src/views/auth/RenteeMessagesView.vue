@@ -9,81 +9,6 @@ const route = useRoute()
 const userFirstName = ref('')
 
 // Sample rental data
-const valueRentals = ref([
-  {
-    name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Prom Dress',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Rain Boots',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'E-bikes',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Filipiniana',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Chemistry Book',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Karaoke Machine',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Chairs & Tables',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Vans',
-    image: '/images/sample-item.jpg',
-  },
-
-  {
-    name: 'Laboratory Gown',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Scientific Calculator',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Arnis Stick',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Safety Vest ',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Power Bank ',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Safety Goggles ',
-    image: '/images/sample-item.jpg',
-  },
-  {
-    name: 'Sound System',
-    image: '/images/sample-item.jpg',
-  },
-])
 
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
@@ -134,7 +59,7 @@ function onClick() {
                   text
                   class="nav-btn"
                   :class="{ active: route.path === '/renteeMessages' }"
-                  @click="navigateTo('renteeMessages')"
+                  @click="navigateTo('/renteeMessages')"
                   >Messages</v-btn
                 >
                 <v-btn
@@ -173,49 +98,17 @@ function onClick() {
             <div class="custom-divider mx-auto"></div>
           </v-row>
           <v-row justify="center" class="mb-4">
-            <h2 class="hello-text">HELLO, {{ userFirstName.toUpperCase() }}!</h2>
+            <h2 class="hello-text">MESSAGES</h2>
           </v-row>
 
-          <!-- Welcome Text -->
-          <v-row justify="center" class="mb-2">
-            <p class="welcome-text">Welcome to Easy Borrow</p>
-          </v-row>
-
-          <!-- Black Line -->
-          <v-row justify="center" class="mb-8">
-            <div class="custom-divider mx-auto"></div>
-          </v-row>
-
-          <v-row justify="start" class="mb-6">
-            <h2 class="section-title" style="padding-left: 50px"></h2>
-          </v-row>
-
-          <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="4" v-for="(rental, index) in valueRentals" :key="index">
-              <v-card class="rental-card pa-5" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
-                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
-                <v-card-text class="rental-info">
-                  <div>
-                    <v-btn
-                      color="yellow-lighten-2"
-                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
-                      type="submit"
-                      block
-                      >View details
-                    </v-btn>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-
-          <v-spacer class="my-15"> </v-spacer>
           <v-row justify="center" class="mb-8">
             <div
               class="custom-divider mx-auto"
               style="border-top: 3px solid black; width: 95%"
             ></div>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h2 class="section-title" style="padding-left: 50px"></h2>
           </v-row>
         </div>
       </v-container>

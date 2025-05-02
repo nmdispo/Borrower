@@ -109,8 +109,8 @@ function navigateTo(path) {
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/messages' }"
-                  @click="navigateTo('/messages')"
+                  :class="{ active: route.path === '/renteeMessages' }"
+                  @click="navigateTo('renteeMessages')"
                   >Messages</v-btn
                 >
                 <v-btn
