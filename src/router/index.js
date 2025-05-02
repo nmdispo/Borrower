@@ -6,6 +6,7 @@ import RenterLoginView from '@/views/RenterLoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import RenterDashboardView from '@/views/RenterDashboardView.vue'
 import RentalsView from '@/views/RentalsView.vue'
+import RenteeRentalView from '@/views/auth/RenteeRentalView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/rentals',
       name: 'rentals',
       component: RentalsView,
+    },
+    {
+      path: '/renteeRentals',
+      name: 'renteeRentals',
+      component: RenteeRentalView,
     },
   ],
 })

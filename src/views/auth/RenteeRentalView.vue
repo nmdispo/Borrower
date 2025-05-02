@@ -30,9 +30,6 @@ const valueRentals = ref([
     name: 'E-bikes',
     image: '/images/sample-item.jpg',
   },
-])
-
-const nearbyRentals = ref([
   {
     name: 'Filipiniana',
     image: '/images/sample-item.jpg',
@@ -53,9 +50,7 @@ const nearbyRentals = ref([
     name: 'Vans',
     image: '/images/sample-item.jpg',
   },
-])
 
-const availabilityRentals = ref([
   {
     name: 'Laboratory Gown',
     image: '/images/sample-item.jpg',
@@ -76,6 +71,18 @@ const availabilityRentals = ref([
     name: 'Safety Vest ',
     image: '/images/sample-item.jpg',
   },
+  {
+    name: 'Power Bank ',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Safety Goggles ',
+    image: '/images/sample-item.jpg',
+  },
+  {
+    name: 'Sound System',
+    image: '/images/sample-item.jpg',
+  },
 ])
 
 onMounted(() => {
@@ -85,6 +92,17 @@ onMounted(() => {
 
 function navigateTo(path) {
   router.push(path)
+}
+
+const loaded = ref(false)
+const loading = ref(false)
+
+function onClick() {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+    loaded.value = true
+  }, 2000)
 }
 </script>
 
@@ -98,7 +116,13 @@ function navigateTo(path) {
             <v-img src="/images/EBlogo.png" width="160" height="160" contain />
             <v-sheet class="nav-container px-6 py-2 ml-4" color="white">
               <v-row align="center" no-gutters>
-                <v-btn text class="nav-btn nav-btn-home">Home</v-btn>
+                <v-btn
+                  text
+                  class="nav-btn"
+                  :class="{ active: route.path === '/renteelogin' }"
+                  @click="navigateTo('renteelogin')"
+                  >Home</v-btn
+                >
                 <v-btn
                   text
                   class="nav-btn"
@@ -125,6 +149,25 @@ function navigateTo(path) {
           </v-col>
         </v-row>
 
+        <v-container justify="center" align="center" class="mb-6 py-6">
+          <v-sheet class="navigation-container px-1 py-1" color="white">
+            <v-row align="center" no-gutters>
+              <v-col>
+                <v-text-field
+                  :loading="loading"
+                  append-inner-icon="mdi-magnify"
+                  density="compact"
+                  label="Search templates"
+                  variant="solo"
+                  hide-details
+                  single-line
+                  @click:append-inner="onClick"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </v-container>
+
         <div class="yellow-section py-8 px-4">
           <v-row justify="center" class="mb-8">
             <div class="custom-divider mx-auto"></div>
@@ -144,11 +187,11 @@ function navigateTo(path) {
           </v-row>
 
           <v-row justify="start" class="mb-6">
-            <h2 class="section-title" style="padding-left: 50px">Value Rentals</h2>
+            <h2 class="section-title" style="padding-left: 50px"></h2>
           </v-row>
 
           <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="2" v-for="(rental, index) in valueRentals" :key="index">
+            <v-col cols="12" sm="6" md="4" v-for="(rental, index) in valueRentals" :key="index">
               <v-card class="rental-card pa-5" elevation="3">
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
@@ -159,7 +202,7 @@ function navigateTo(path) {
                       class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
                       type="submit"
                       block
-                      >View price
+                      >View details
                     </v-btn>
                   </div>
                 </v-card-text>
@@ -167,59 +210,7 @@ function navigateTo(path) {
             </v-col>
           </v-row>
 
-          <v-row justify="start" class="mb-6">
-            <h2 class="section-title" style="padding-left: 50px">Nearby Rentals</h2>
-          </v-row>
-
-          <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="2" v-for="(rental, index) in nearbyRentals" :key="index">
-              <v-card class="rental-card pa-5" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
-                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
-                <v-card-text class="rental-info">
-                  <div>
-                    <v-btn
-                      color="yellow-lighten-2"
-                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
-                      type="submit"
-                      block
-                      >View location
-                    </v-btn>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-row justify="start" class="mb-6">
-            <h2 class="section-title" style="padding-left: 50px">Availability</h2>
-          </v-row>
-
-          <v-row justify="center" class="mt-4" dense>
-            <v-col
-              cols="12"
-              sm="6"
-              md="2"
-              v-for="(rental, index) in availabilityRentals"
-              :key="index"
-            >
-              <v-card class="rental-card pa-5" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
-                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
-                <v-card-text class="rental-info">
-                  <div>
-                    <v-btn
-                      color="yellow-lighten-2"
-                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
-                      type="submit"
-                      block
-                      >View availability
-                    </v-btn>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-
+          <v-spacer class="my-15"> </v-spacer>
           <v-row justify="center" class="mb-8">
             <div
               class="custom-divider mx-auto"
