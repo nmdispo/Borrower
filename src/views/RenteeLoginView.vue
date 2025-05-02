@@ -28,6 +28,18 @@ const currentRentals = ref([
     rentalPeriod: 'May 5–12, 2025',
     fee: '₱900.00',
   },
+  {
+    name: 'Tent 4-Person',
+    image: '/images/sample-item.jpg',
+    rentalPeriod: 'May 5–12, 2025',
+    fee: '₱900.00',
+  },
+  {
+    name: 'Tent 4-Person',
+    image: '/images/sample-item.jpg',
+    rentalPeriod: 'May 5–12, 2025',
+    fee: '₱900.00',
+  },
 ])
 
 onMounted(() => {
@@ -111,7 +123,7 @@ function onClick() {
           <v-row justify="center" class="mb-8">
             <div
               class="custom-divider mx-auto"
-              style="border-top: 40x solid black; width: 30px"
+              style="border-top: 10px solid black; width: 70px"
             ></div>
           </v-row>
 
@@ -132,17 +144,13 @@ function onClick() {
             <div class="custom-divider mx-auto"></div>
           </v-row>
 
-          <v-row justify="center" class="mb-4">
-            <h2 class="section-title">Current Rentals</h2>
-          </v-row>
-
-          <v-row justify="center" class="mb-2">
-            <p class="section-subtitle">Here's what you're currently renting</p>
+          <v-row justify="start" class="mb-6">
+            <h2 class="section-title" style="padding-left: 50px">Value Rentals</h2>
           </v-row>
 
           <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="4" v-for="(rental, index) in currentRentals" :key="index">
-              <v-card class="rental-card pa-4" elevation="3">
+            <v-col cols="12" sm="6" md="2" v-for="(rental, index) in currentRentals" :key="index">
+              <v-card class="rental-card pa-5" elevation="3">
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
@@ -197,7 +205,7 @@ function onClick() {
   background-color: #fff170;
   min-height: 100vh;
   padding: 40px;
-  border-radius: 16px;
+  border-radius: 150px;
 }
 .hello-text {
   font-size: 50px;
@@ -221,7 +229,7 @@ function onClick() {
   font-size: 32px;
   font-weight: bold;
   color: #000;
-  font-family: 'Kaushan Script', cursive;
+  font-family: 'Lexend Exa', sans-serif;
   letter-spacing: 1px;
 }
 .section-subtitle {
