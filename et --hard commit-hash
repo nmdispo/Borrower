@@ -1,0 +1,24 @@
+[33mecbf109[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33mecbf109[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{1}: commit (merge): added renter dashboard
+[33m9476eee[m HEAD@{2}: commit: rentee login navbar
+[33m8a1bc0e[m HEAD@{3}: commit (merge): added dashboard
+[33m862822c[m HEAD@{4}: commit: added dashboard
+[33m2b489ed[m HEAD@{5}: commit: changed login background
+[33mb9e284f[m HEAD@{6}: commit: added new branch
+[33mc7d4c98[m HEAD@{7}: commit: added card in rentee dashboard
+[33mc2b803d[m HEAD@{8}: commit: added icon
+[33mc245d13[m HEAD@{9}: commit: added a dropdodwn
+[33mc2c569d[m HEAD@{10}: commit: added new background in login page
+[33me044999[m HEAD@{11}: commit: changed the overall log in page
+[33md559f62[m HEAD@{12}: commit: added a card in the login view
+[33m447c75b[m[33m ([m[1;31morigin/easyborrow[m[33m)[m HEAD@{13}: commit: fixed login page
+[33mbfda35e[m HEAD@{14}: commit: connecting of pages
+[33mb1364d6[m HEAD@{15}: commit: changed background
+[33m6c8b75a[m HEAD@{16}: commit: change some contents
+[33m8112cfa[m HEAD@{17}: commit: added rentee and renter view page
+[33m2fe57aa[m HEAD@{18}: commit: added new view
+[33m36c8cb1[m HEAD@{19}: commit: added proper folder structure
+[33ma2e98ba[m HEAD@{20}: commit: added login view
+[33mf6ee76b[m HEAD@{21}: commit: added veutify
+[33mfecbc32[m HEAD@{22}: Branch: renamed refs/heads/master to refs/heads/main
+[33mfecbc32[m HEAD@{24}: commit (initial): first commit
