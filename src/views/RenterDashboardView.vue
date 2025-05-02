@@ -7,28 +7,15 @@ const router = useRouter()
 const route = useRoute()
 
 const userFirstName = ref('')
+const currentRentals = ref([])
 
-// Sample rental data
-const currentRentals = ref([
-  {
-    name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 1–10, 2025',
-    fee: '₱750.00',
-  },
-  {
-    name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 3–8, 2025',
-    fee: '₱1,350.00',
-  },
-  {
-    name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 5–12, 2025',
-    fee: '₱900.00',
-  },
-])
+onMounted(() => {
+  const storedName = localStorage.getItem('userFirstName')
+  userFirstName.value = storedName
+
+  const savedItems = localStorage.getItem('currentRentals')
+  currentRentals.value = savedItems ? JSON.parse(savedItems) : []
+})
 
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
@@ -37,14 +24,6 @@ onMounted(() => {
 
 function navigateTo(path) {
   router.push(path)
-}
-
-function listItem() {
-  router.push('/list-item')
-}
-
-function viewBookings() {
-  router.push('/bookings')
 }
 </script>
 
@@ -85,7 +64,7 @@ function viewBookings() {
           </v-col>
         </v-row>
 
-        <!-- Yellow section -->
+        <!-- Yellow Section -->
         <div class="yellow-section py-8 px-4">
           <!-- Hello -->
           <v-row justify="center" class="mb-4">
@@ -97,18 +76,31 @@ function viewBookings() {
             <p class="welcome-text">Welcome to Easy Borrow</p>
           </v-row>
 
-          <!-- Black Line -->
+          <!-- Divider -->
           <v-row justify="center" class="mb-8">
             <div class="custom-divider mx-auto"></div>
           </v-row>
 
           <!-- Action Buttons -->
           <v-row justify="center" class="mb-6" align="center">
-            <v-btn class="nav-btn mx-4 px-10 py-4" @click="listItem">List an Item</v-btn>
-            <v-btn class="nav-btn mx-4 px-10 py-4" @click="viewBookings">View Bookings</v-btn>
+            <router-link to="/rentals" style="text-decoration: none">
+              <v-btn class="nav-btn mx-4 px-10 py-4">List an Item</v-btn>
+            </router-link>
+
+            <router-link
+              :to="{ path: '/rentals', query: { slide: 'bookings' } }"
+              style="text-decoration: none"
+            >
+              <v-btn
+                class="nav-btn mx-4 px-10 py-4"
+                @click="router.push({ path: '/rentals', query: { slide: 2 } })"
+              >
+                View Bookings
+              </v-btn>
+            </router-link>
           </v-row>
 
-          <!-- Black Line -->
+          <!-- Divider -->
           <v-row justify="center" class="mb-8">
             <div class="custom-divider mx-auto"></div>
           </v-row>
@@ -119,7 +111,7 @@ function viewBookings() {
           </v-row>
 
           <v-row justify="center" class="mb-2">
-            <p class="section-subtitle">Here's what you're currently renting</p>
+            <p class="section-subtitle">Here's what you currently listed</p>
           </v-row>
 
           <v-row justify="center" class="mt-4" dense>

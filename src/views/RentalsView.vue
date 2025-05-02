@@ -1,83 +1,127 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { watchEffect } from 'vue'
 
 const router = useRouter()
+const currentRentals = ref([])
+const viewIndex = ref(0) // 0: Add Item, 1: Listed Items, 2: Bookings
 
 const itemName = ref('')
-const rentalFee = ref(null)
-const description = ref('')
 const photo = ref(null)
-const location = ref('')
 const availableDates = ref([])
-const bookedDates = ref([])
-const currentRentals = ref([])
-
-onMounted(() => {
-  const savedRentals = localStorage.getItem('currentRentals')
-  if (savedRentals) {
-    currentRentals.value = JSON.parse(savedRentals)
-  }
-})
+const quantity = ref(1)
+const rentalFee = ref('')
+const editingIndex = ref(null)
 
 function handleUpload(e) {
   const file = e.target.files[0]
-  if (file) {
-    photo.value = URL.createObjectURL(file)
-  }
-}
-
-function getDateString(date) {
-  const normalized = new Date(date)
-  normalized.setHours(0, 0, 0, 0)
-  return normalized.toISOString().split('T')[0]
-}
-
-function toggleDate({ date }) {
-  const dateStr = getDateString(date)
-
-  if (availableDates.value.includes(dateStr)) {
-    // Move to booked
-    availableDates.value = availableDates.value.filter((d) => d !== dateStr)
-    bookedDates.value.push(dateStr)
-  } else if (bookedDates.value.includes(dateStr)) {
-    // Clear the date
-    bookedDates.value = bookedDates.value.filter((d) => d !== dateStr)
-  } else {
-    // Make available
-    availableDates.value.push(dateStr)
-  }
+  if (file) photo.value = URL.createObjectURL(file)
 }
 
 function getDayClass(date) {
-  const dateStr = getDateString(date)
-  if (availableDates.value.includes(dateStr)) return 'available'
-  if (bookedDates.value.includes(dateStr)) return 'booked'
-  return ''
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  const iso = d.toISOString().split('T')[0]
+  return availableDates.value.map((d) => new Date(d).toISOString().split('T')[0]).includes(iso)
+    ? 'available'
+    : ''
+}
+
+function formatDateList(dates) {
+  return dates.map((date) => new Date(date).toLocaleDateString()).join(', ')
 }
 
 function addToList() {
-  currentRentals.value.push({
+  if (!availableDates.value.length) {
+    alert('Please select at least one available date.')
+    return
+  }
+
+  const newItem = {
     name: itemName.value,
     image: photo.value || '/images/sample-item.jpg',
-    rentalPeriod: availableDates.value.join(', '),
-    fee: `₱${parseFloat(rentalFee.value).toFixed(2)}`,
-    description: description.value,
-    location: location.value,
-  })
+    rentalPeriod: formatDateList(availableDates.value),
+    quantity: quantity.value,
+    fee: rentalFee.value,
+    rawDates: [...availableDates.value],
+  }
+
+  if (editingIndex.value !== null) {
+    currentRentals.value[editingIndex.value] = newItem
+    editingIndex.value = null
+  } else {
+    currentRentals.value.push(newItem)
+  }
+
   localStorage.setItem('currentRentals', JSON.stringify(currentRentals.value))
-  alert('Item listed successfully!')
-  router.push('/renterdashboard')
+
+  resetForm()
+  viewIndex.value = 1 // show listed items after adding
 }
+
+function editItem(index) {
+  const item = currentRentals.value[index]
+  itemName.value = item.name
+  photo.value = item.image
+  rentalFee.value = item.fee
+  quantity.value = item.quantity
+  availableDates.value = item.rawDates || []
+  editingIndex.value = index
+  viewIndex.value = 0
+}
+
+function resetForm() {
+  itemName.value = ''
+  photo.value = null
+  rentalFee.value = ''
+  quantity.value = 1
+  availableDates.value = []
+  editingIndex.value = null
+}
+
+function deleteItem(index) {
+  if (confirm('Are you sure you want to delete this item?')) {
+    currentRentals.value.splice(index, 1)
+    localStorage.setItem('currentRentals', JSON.stringify(currentRentals.value))
+  }
+}
+
+function handleKeyPress(e) {
+  if (e.key === 'ArrowLeft') {
+    viewIndex.value = (viewIndex.value + 2) % 3
+  } else if (e.key === 'ArrowRight') {
+    viewIndex.value = (viewIndex.value + 1) % 3
+  }
+}
+
+watchEffect(() => {
+  const slideParam = router.currentRoute.value.query.slide
+  const slideNum = parseInt(slideParam)
+
+  if (!isNaN(slideNum) && slideNum >= 0 && slideNum <= 2) {
+    viewIndex.value = slideNum
+  }
+})
+
+onMounted(() => {
+  const saved = localStorage.getItem('currentRentals')
+  currentRentals.value = saved ? JSON.parse(saved) : []
+  window.addEventListener('keydown', handleKeyPress)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeyPress)
+})
 </script>
 
 <template>
   <v-app>
     <v-main>
       <v-container class="py-6">
-        <!-- Navigation -->
+        <!-- NAVIGATION -->
         <v-row justify="center" align="center" class="mb-6">
           <v-col cols="auto" class="d-flex align-center">
             <v-img src="/images/EBlogo.png" width="160" height="160" contain />
@@ -92,88 +136,93 @@ function addToList() {
           </v-col>
         </v-row>
 
-        <!-- Divider -->
-        <v-row justify="center" class="mb-8">
+        <!-- DIVIDER -->
+        <v-row justify="center" class="mb-6">
           <div class="custom-divider mx-auto"></div>
         </v-row>
 
-        <!-- Listing Form -->
-        <div class="yellow-section py-6 px-4">
-          <!-- Inputs -->
+        <!-- DOT NAVIGATION -->
+        <v-row justify="center" class="mb-6">
+          <v-col cols="auto">
+            <div class="dot-nav">
+              <span :class="{ dot: true, active: viewIndex === 0 }" @click="viewIndex = 0"></span>
+              <span :class="{ dot: true, active: viewIndex === 1 }" @click="viewIndex = 1"></span>
+              <span :class="{ dot: true, active: viewIndex === 2 }" @click="viewIndex = 2"></span>
+            </div>
+          </v-col>
+        </v-row>
+
+        <!-- VIEWS -->
+        <div v-if="viewIndex === 0" class="item-list-yellow rounded-lg pa-6">
+          <h3 class="list-header text-center">Add New Item</h3>
+          <div class="underline mb-6"></div>
+
           <v-row class="mb-4">
             <v-col cols="12" sm="6">
-              <v-text-field v-model="itemName" label="Item Name" variant="solo"></v-text-field>
+              <v-text-field v-model="itemName" label="Item Name" />
             </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                v-model="rentalFee"
-                label="Rental Fee (₱)"
-                type="number"
-                variant="solo"
-              ></v-text-field>
+            <v-col cols="12" sm="3">
+              <v-text-field v-model="quantity" type="number" label="Quantity" />
+            </v-col>
+            <v-col cols="12" sm="3">
+              <v-text-field v-model="rentalFee" type="number" prefix="₱" label="Rental Fee" />
             </v-col>
           </v-row>
 
           <v-row class="mb-4">
-            <v-col cols="12">
-              <v-textarea
-                label="Description"
-                placeholder="Optional"
-                variant="solo-filled"
-                auto-grow
-                v-model="description"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-
-          <!-- Image upload & calendar -->
-          <v-row class="mb-4">
             <v-col cols="12" sm="6">
-              <v-sheet class="image-upload-box d-flex align-center justify-center" color="#fff170">
-                <v-img v-if="photo" :src="photo" height="120" />
-                <v-icon v-else size="64">mdi-camera</v-icon>
-              </v-sheet>
-              <v-file-input
-                hide-details
-                accept="image/*"
-                @change="handleUpload"
-                prepend-icon="mdi-upload"
-                label="Upload photo"
-              ></v-file-input>
+              <v-file-input label="Upload Photo" accept="image/*" @change="handleUpload" />
+              <v-img v-if="photo" :src="photo" class="mt-2 rounded-lg" height="120" cover />
             </v-col>
             <v-col cols="12" sm="6">
               <div class="calendar-box pa-4">
-                <div class="calendar-header mb-2">Select Dates</div>
-                <Datepicker :multi-dates="true" :day-class="getDayClass" @day-click="toggleDate" />
-                <p class="text-caption mt-2">Click a date to toggle: Available → Booked → Clear</p>
+                <div class="calendar-header mb-2">Select Available Dates</div>
+                <Datepicker v-model="availableDates" :multi-dates="true" :day-class="getDayClass" />
+                <p class="text-caption mt-2">Click a date to toggle availability</p>
               </div>
             </v-col>
           </v-row>
 
-          <!-- Location -->
-          <v-row class="mb-4">
-            <v-col cols="12">
-              <v-text-field
-                v-model="location"
-                prepend-inner-icon="mdi-map-marker"
-                label="Location"
-                variant="solo"
-              />
+          <v-row>
+            <v-col cols="12" class="text-center">
+              <v-btn color="yellow darken-2" @click="addToList">
+                {{ editingIndex !== null ? 'Save Changes' : 'Add to the list' }}
+              </v-btn>
             </v-col>
           </v-row>
+        </div>
 
-          <v-row class="mb-6">
-            <v-col cols="12">
-              <v-img src="/images/sample-map.png" height="180" cover class="rounded-lg"></v-img>
+        <div v-else-if="viewIndex === 1" class="item-list-yellow rounded-lg pa-6">
+          <h3 class="list-header text-center">My Listed Items</h3>
+          <div class="underline mb-6"></div>
+          <v-row dense>
+            <v-col v-for="(it, i) in currentRentals" :key="i" cols="12" class="mb-4">
+              <v-sheet
+                class="d-flex justify-space-between align-center pa-4 rounded-xl"
+                elevation="2"
+                color="white"
+              >
+                <div class="d-flex align-center item-clickable" @click="editItem(i)">
+                  <v-img :src="it.image" width="120" height="120" class="rounded-lg" cover />
+                  <v-col class="item-info">
+                    <div class="font-weight-bold mb-1 text-lg">{{ it.name }}</div>
+                    <div class="mb-1">Available date(s): {{ it.rentalPeriod }}</div>
+                    <div class="mb-1">Rental Fee: ₱{{ it.fee }}</div>
+                    <div>Quantity: {{ it.quantity }}</div>
+                  </v-col>
+                </div>
+                <v-btn icon color="red" @click.stop="deleteItem(i)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-sheet>
             </v-col>
           </v-row>
+        </div>
 
-          <!-- Submit -->
-          <v-row justify="center">
-            <v-btn class="submit-btn" color="yellow darken-2" @click="addToList"
-              >Add to the list</v-btn
-            >
-          </v-row>
+        <div v-else class="item-list-yellow rounded-lg pa-6">
+          <h3 class="list-header text-center">View Bookings</h3>
+          <div class="underline mb-6"></div>
+          <p class="text-center">No bookings yet. (Placeholder for booking data)</p>
         </div>
       </v-container>
     </v-main>
@@ -184,68 +233,72 @@ function addToList() {
 .nav-container {
   border: 2px solid #ffd700;
   border-radius: 15px;
-  display: inline-block;
 }
 .nav-btn {
   font-weight: bold;
   color: black !important;
   margin-right: 20px;
   border-radius: 20px;
-  background-color: white;
 }
 .nav-btn-home {
   border: 1px solid black !important;
   pointer-events: none;
 }
-.yellow-section {
-  background-color: #fff170;
-  border-radius: 16px;
-}
 .custom-divider {
   width: 95%;
   height: 2px;
-  background-color: black;
-  border-radius: 2px;
+  background: black;
 }
-.image-upload-box {
-  width: 100%;
-  height: 140px;
-  border-radius: 12px;
-  border: 1px dashed #333;
+.item-list-yellow {
+  background: #fff170;
+}
+.list-header {
+  font-family: 'Kaushan Script', cursive;
+  font-size: 2rem;
+}
+.underline {
+  height: 2px;
+  background: #000;
+  margin: 0.5rem auto 1.5rem;
+  width: 60%;
+}
+.item-info {
+  padding-left: 20px;
 }
 .calendar-box {
-  background-color: white;
+  background: white;
   border-radius: 12px;
 }
 .calendar-header {
   font-weight: bold;
   font-size: 16px;
 }
-.submit-btn {
-  border-radius: 30px;
-  padding: 16px 40px;
-  font-size: 16px;
-  font-weight: bold;
-}
 :deep(.dp__cell.available) {
   background-color: #4caf50 !important;
   color: white !important;
   border-radius: 8px;
 }
-:deep(.dp__cell.booked) {
-  background-color: #f44336 !important;
-  color: white !important;
-  border-radius: 8px;
+.item-clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
-:deep(.dp__cell.available) {
-  background-color: #4caf50 !important;
-  color: white !important;
-  border-radius: 8px;
+.item-clickable:hover {
+  background-color: #ffec99;
 }
-
-:deep(.dp__cell.booked) {
-  background-color: #f44336 !important;
-  color: white !important;
-  border-radius: 8px;
+.dot-nav {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: gray;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.dot.active {
+  background: black;
 }
 </style>
