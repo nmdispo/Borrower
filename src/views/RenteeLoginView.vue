@@ -8,43 +8,13 @@ const route = useRoute()
 
 const userFirstName = ref('')
 
-// Sample rental data
-const currentRentals = ref([
-  {
-    name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 1–10, 2025',
-    fee: '₱750.00',
-  },
-  {
-    name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 3–8, 2025',
-    fee: '₱1,350.00',
-  },
-  {
-    name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
-    rentalPeriod: 'May 5–12, 2025',
-    fee: '₱900.00',
-  },
-])
-
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
-  userFirstName.value = storedName ? storedName : 'User'
+  userFirstName.value = storedName ? storedName : 'Ella'
 })
 
 function navigateTo(path) {
   router.push(path)
-}
-
-function listItem() {
-  router.push('/list-item')
-}
-
-function viewBookings() {
-  router.push('/bookings')
 }
 </script>
 
@@ -103,36 +73,15 @@ function viewBookings() {
           </v-row>
 
           <!-- Action Buttons -->
-          <v-row justify="center" class="mb-6" align="center">
-            <v-btn class="nav-btn mx-4 px-10 py-4" @click="listItem">List an Item</v-btn>
-            <v-btn class="nav-btn mx-4 px-10 py-4" @click="viewBookings">View Bookings</v-btn>
-          </v-row>
+          <v-row justify="center" class="mb-6">
+            <v-toolbar
+              ><template v-slot:append>
+                <div class="d-flex ga-1">
+                  <v-btn icon="mdi-magnify"></v-btn>
 
-          <!-- Black Line -->
-          <v-row justify="center" class="mb-8">
-            <div class="custom-divider mx-auto"></div>
-          </v-row>
-
-          <!-- Current Rentals Section -->
-          <v-row justify="center" class="mb-4">
-            <h2 class="section-title">Current Rentals</h2>
-          </v-row>
-
-          <v-row justify="center" class="mb-2">
-            <p class="section-subtitle">Here's what you're currently renting</p>
-          </v-row>
-
-          <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="4" v-for="(rental, index) in currentRentals" :key="index">
-              <v-card class="rental-card pa-4" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
-                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
-                <v-card-text class="rental-info">
-                  <div><strong>Rental Date:</strong> {{ rental.rentalPeriod }}</div>
-                  <div><strong>Rental Fee:</strong> {{ rental.fee }}</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
+                  <v-btn icon="mdi-dots-vertical"></v-btn>
+                </div> </template
+            ></v-toolbar>
           </v-row>
         </div>
       </v-container>
