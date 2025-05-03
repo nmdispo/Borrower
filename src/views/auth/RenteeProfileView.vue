@@ -8,101 +8,6 @@ const route = useRoute()
 
 const userFirstName = ref('')
 
-// Sample rental data
-const valueRentals = ref([
-  {
-    name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
-    rentalFee: '30.00',
-  },
-  {
-    name: 'Prom Dress',
-    image: '/images/sample-item.jpg',
-    rentalFee: '1500.00',
-  },
-  {
-    name: 'Rain Boots',
-    image: '/images/sample-item.jpg',
-    rentalFee: '70.00',
-  },
-  {
-    name: 'E-bikes',
-    image: '/images/sample-item.jpg',
-    rentalFee: '50.00',
-  },
-  {
-    name: 'Filipiniana',
-    image: '/images/sample-item.jpg',
-    rentalFee: '300.00',
-  },
-  {
-    name: 'Chemistry Book',
-    image: '/images/sample-item.jpg',
-    rentalFee: '30.00',
-  },
-  {
-    name: 'Karaoke Machine',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Chairs & Tables',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Vans',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-
-  {
-    name: 'Laboratory Gown',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Scientific Calculator',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Arnis Stick',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Safety Vest ',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Power Bank ',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Safety Goggles ',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Sound System',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-])
-
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
   userFirstName.value = storedName ? storedName : 'Ella'
@@ -191,86 +96,21 @@ function onClick() {
             <div class="custom-divider mx-auto"></div>
           </v-row>
           <v-row justify="center" class="mb-4">
-            <h2 class="hello-text">HELLO, {{ userFirstName.toUpperCase() }}!</h2>
+            <h2 class="hello-text">Profile</h2>
           </v-row>
 
           <!-- Welcome Text -->
-          <v-row justify="center" class="mb-2">
-            <p class="welcome-text">Welcome to Easy Borrow</p>
-          </v-row>
 
           <!-- Black Line -->
-          <v-row justify="center" class="mb-8">
-            <div class="custom-divider mx-auto"></div>
-          </v-row>
 
-          <v-row justify="start" class="mb-6">
-            <h2 class="section-title" style="padding-left: 50px"></h2>
-          </v-row>
-
-          <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="4" v-for="(rental, index) in valueRentals" :key="index">
-              <v-card class="rental-card pa-5" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
-                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
-                <v-card-text class="rental-info">
-                  <v-dialog max-width="500">
-                    <template v-slot:activator="{ props: activatorProps }">
-                      <v-btn
-                        color="yellow-lighten-2"
-                        class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
-                        v-bind="activatorProps"
-                        text="View details"
-                        variant="flat"
-                        block
-                      ></v-btn>
-                    </template>
-
-                    <template v-slot:default="{ isActive }">
-                      <v-card class="text-center">
-                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
-                        <v-row>
-                          <v-col>
-                            <v-card-text>
-                              Item name: <br />{{ valueRentals[index].name }}</v-card-text
-                            >
-                          </v-col>
-                          <v-col>
-                            <v-card-text>
-                              Rental fee: <br />₱{{ valueRentals[index].rentalFee }}</v-card-text
-                            >
-                          </v-col>
-                        </v-row>
-                        <v-col>
-                          <v-card-text> Available: </v-card-text>
-                        </v-col>
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-
-                          <v-btn
-                            color="yellow-lighten-2"
-                            class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
-                            v-bind="activatorProps"
-                            text="RENT NOW"
-                            variant="flat"
-                            block
-                            @click="isActive.value = false"
-                          ></v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </template>
-                  </v-dialog>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-
-          <v-spacer class="my-15"> </v-spacer>
           <v-row justify="center" class="mb-8">
             <div
               class="custom-divider mx-auto"
               style="border-top: 3px solid black; width: 95%"
             ></div>
+          </v-row>
+          <v-row>
+            <div></div>
           </v-row>
         </div>
       </v-container>

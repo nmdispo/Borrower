@@ -81,7 +81,7 @@ function onPasswordInput(e) {
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/yellowback.jpg')`,
+            backgroundImage: `url('/public/images/ygellowback.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"

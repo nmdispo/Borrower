@@ -1,14 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watchEffect, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const theme = ref('light')
 const router = useRouter()
 const route = useRoute()
 
-const userFirstName = ref('')
+const activeIndex = ref(0)
+const currentPath = ref(route.path)
 
-// Sample rental data
+const userFirstName = ref('')
 
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
@@ -18,6 +19,21 @@ onMounted(() => {
 function navigateTo(path) {
   router.push(path)
 }
+watchEffect(() => {
+  currentPath.value = route.path
+})
+
+const messages = ref([
+  { name: 'Jannah', preview: '2 messages from Jannah', avatar: '👩', status: 'online' },
+  { name: 'Honey', preview: '5 messages from Honey', avatar: '🧑', status: 'online' },
+  { name: 'Dan', preview: 'Thank you!', avatar: '🧔', status: 'online' },
+  { name: 'Joseph', preview: 'You replied to Joseph', avatar: '👨‍💼', status: 'online' },
+  { name: 'Marian', preview: "Thanks ma'am", avatar: '👩', status: 'online' },
+  { name: 'Andrei', preview: 'You replied to Andrei', avatar: '👨‍💼', status: 'online' },
+  { name: 'Yuri', preview: 'You replied to Yuri', avatar: '🧑', status: 'online' },
+  { name: 'Beth', preview: 'You replied to Beth', avatar: '👩', status: 'online' },
+  { name: 'Queen', preview: 'Queen unsent a message', avatar: '👑', status: 'online' },
+])
 
 const loaded = ref(false)
 const loading = ref(false)
@@ -59,14 +75,14 @@ function onClick() {
                   text
                   class="nav-btn"
                   :class="{ active: route.path === '/renteeMessages' }"
-                  @click="navigateTo('/renteeMessages')"
+                  @click="navigateTo('renteeMessages')"
                   >Messages</v-btn
                 >
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/profile' }"
-                  @click="navigateTo('/profile')"
+                  :class="{ active: route.path === '/renteeProfile' }"
+                  @click="navigateTo('/renteeProfile')"
                   >Profile</v-btn
                 >
               </v-row>
@@ -74,32 +90,17 @@ function onClick() {
           </v-col>
         </v-row>
 
-        <v-container justify="center" align="center" class="mb-6 py-6">
-          <v-sheet class="navigation-container px-1 py-1" color="white">
-            <v-row align="center" no-gutters>
-              <v-col>
-                <v-text-field
-                  :loading="loading"
-                  append-inner-icon="mdi-magnify"
-                  density="compact"
-                  label="Search templates"
-                  variant="solo"
-                  hide-details
-                  single-line
-                  @click:append-inner="onClick"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-sheet>
-        </v-container>
-
         <div class="yellow-section py-8 px-4">
           <v-row justify="center" class="mb-8">
             <div class="custom-divider mx-auto"></div>
           </v-row>
           <v-row justify="center" class="mb-4">
-            <h2 class="hello-text">MESSAGES</h2>
+            <h2 class="hello-text">Messages</h2>
           </v-row>
+
+          <!-- Welcome Text -->
+
+          <!-- Black Line -->
 
           <v-row justify="center" class="mb-8">
             <div
@@ -107,9 +108,50 @@ function onClick() {
               style="border-top: 3px solid black; width: 95%"
             ></div>
           </v-row>
-          <v-row justify="start" class="mb-6">
-            <h2 class="section-title" style="padding-left: 50px"></h2>
+          <v-row>
+            <div></div>
           </v-row>
+          <v-container justify="center" align="center" class="mb-6 py-6">
+            <v-sheet class="navigation-container px-1 py-1" color="white">
+              <v-row align="center" no-gutters>
+                <v-col>
+                  <v-text-field
+                    :loading="loading"
+                    append-inner-icon="mdi-magnify"
+                    density="compact"
+                    label="Search templates"
+                    variant="solo"
+                    hide-details
+                    single-line
+                    @click:append-inner="onClick"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-sheet>
+          </v-container>
+
+          <v-list class="px-4" lines="two">
+            <v-list-item
+              v-for="(msg, index) in messages"
+              :key="index"
+              :class="index === activeIndex ? 'bg-indigo-lighten-4 rounded-lg' : ''"
+              @click="activeIndex = index"
+            >
+              <template #prepend>
+                <v-avatar color="white">
+                  <span class="text-h6">{{ msg.avatar }}</span>
+                </v-avatar>
+                <v-icon color="green" size="10" class="ml-1 mt-5">mdi-circle</v-icon>
+              </template>
+
+              <v-list-item-title class="font-weight-bold text-lg">{{ msg.name }}</v-list-item-title>
+              <v-list-item-subtitle class="text-body-2">{{ msg.preview }}</v-list-item-subtitle>
+
+              <template #append>
+                <v-icon>mdi-chevron-right</v-icon>
+              </template>
+            </v-list-item>
+          </v-list>
         </div>
       </v-container>
     </v-main>
