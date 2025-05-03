@@ -240,6 +240,101 @@ function sendMessage() {
 
 <style scoped>
 /* Styles (unchanged) */
+@import url('https://fonts.googleapis.com/css2?family=Jaldi&family=Kaushan+Script&display=swap');
+
+.nav-container {
+  border: 3px solid #ffd700;
+  border-radius: 10px;
+  display: inline-block;
+  width: fit-content;
+}
+.navigation-container {
+  border: 3px solid #ffd700;
+  border-radius: 10px;
+  max-width: 730px;
+  width: 100%;
+}
+.nav-location-container {
+  border: 3px solid #ffd700;
+  border-radius: 10px;
+  max-width: 800px;
+  width: 100%;
+}
+.nav-btn {
+  font-weight: bold;
+  color: black !important;
+  margin-right: 20px;
+  border-radius: 20px;
+  background-color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+.nav-btn.active {
+  border: 1px solid black;
+}
+.nav-btn-home {
+  border: 1px solid black !important;
+  pointer-events: none;
+}
+.yellow-section {
+  background-color: #fff170;
+  min-height: 100vh;
+  padding: 40px;
+  border-radius: 16px;
+}
+.hello-text {
+  font-size: 50px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #000000;
+  font-family: 'Kaushan Script', cursive;
+}
+.welcome-text {
+  font-size: 20px;
+  color: black;
+  font-family: 'Jaldi', sans-serif;
+}
+.custom-divider {
+  width: 95%;
+  height: 2px;
+  background-color: black;
+  border-radius: 2px;
+}
+.section-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #000;
+  font-family: 'Lexend Exa', sans-serif;
+  letter-spacing: 1px;
+}
+.section-subtitle {
+  font-size: 18px;
+  color: #000;
+  font-family: 'Jaldi', sans-serif;
+}
+.rental-card {
+  background-color: white;
+  border-radius: 16px;
+  transition: box-shadow 0.3s;
+}
+.rental-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+.rental-title {
+  font-weight: bold;
+  font-size: 20px;
+  color: #000;
+}
+.rental-info {
+  font-family: 'Jaldi', sans-serif;
+  font-size: 16px;
+  color: #333;
+  margin-top: 8px;
+}
+
 .message-area {
   display: flex;
   flex-direction: column;
