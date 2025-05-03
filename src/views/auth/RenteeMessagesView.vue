@@ -199,7 +199,10 @@ function sendMessage() {
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
-            <v-card-text class="message-area pa-4" style="height: 300px; overflow-y: auto">
+            <v-card-text
+              class="message-area pa-4"
+              style="height: 700px; overflow-y: auto; width: 1000px"
+            >
               <div
                 v-for="(chatMsg, index) in chatMessages"
                 :key="index"
