@@ -100,29 +100,29 @@ function sendMessage() {
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/renteelogin' }"
-                  @click="navigateTo('renteelogin')"
+                  :class="{ active: route.path === '/renterdashboard' }"
+                  @click="navigateTo('renterdashboard')"
                   >Home</v-btn
                 >
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/renteeRentals' }"
-                  @click="navigateTo('renteeRentals')"
+                  :class="{ active: route.path === '/rentals' }"
+                  @click="navigateTo('rentals')"
                   >Rentals</v-btn
                 >
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/renteeMessages' }"
-                  @click="navigateTo('renteeMessages')"
+                  :class="{ active: route.path === '/renterMessage' }"
+                  @click="navigateTo('renterMessage')"
                   >Messages</v-btn
                 >
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/renteeProfile' }"
-                  @click="navigateTo('/renteeProfile')"
+                  :class="{ active: route.path === '/renterProfile' }"
+                  @click="navigateTo('/renterProfile')"
                   >Profile</v-btn
                 >
               </v-row>

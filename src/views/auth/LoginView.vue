@@ -31,10 +31,6 @@ const menuItems = ref([
   { title: 'RENTER', route: '/renterlogin' },
 ])
 
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
 // Password logic
 const actualPassword = ref('')
 const maskedPassword = ref('')
@@ -68,26 +64,15 @@ function onPasswordInput(e) {
 <template>
   <v-responsive class="border rounded">
     <v-app :theme="theme">
-      <v-app-bar class="px-3">
-        <v-spacer></v-spacer>
-
-        <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          slim
-          @click="onClick"
-        ></v-btn>
-      </v-app-bar>
       <v-responsive class="border rounded">
         <v-app
           :theme="theme"
           :style="{
-            backgroundImage: `url('/public/images/yellowback.jpg')`,
+            backgroundImage: `url('/images/yellowback.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }"
         >
-          <v-divider class="my-10"></v-divider>
-
           <v-main>
             <v-container>
               <v-row>

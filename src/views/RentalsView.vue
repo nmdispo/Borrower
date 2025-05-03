@@ -6,6 +6,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { watchEffect } from 'vue'
 
 const router = useRouter()
+
 const currentRentals = ref([])
 const viewIndex = ref(0) // 0: Add Item, 1: Listed Items, 2: Bookings
 
@@ -128,8 +129,20 @@ onBeforeUnmount(() => {
             <v-sheet class="nav-container px-6 py-2 ml-4" color="white">
               <v-row align="center" no-gutters>
                 <v-btn text class="nav-btn" @click="router.push('/renterdashboard')">Home</v-btn>
-                <v-btn text class="nav-btn nav-btn-home">Rentals</v-btn>
-                <v-btn text class="nav-btn" @click="router.push('/messages')">Messages</v-btn>
+                <v-btn
+                  text
+                  class="nav-btn"
+                  :class="{ active: route.path === '/rentals' }"
+                  @click="navigateTo('/rentals')"
+                  >Rentals</v-btn
+                >
+                <v-btn
+                  text
+                  class="nav-btn"
+                  :class="{ active: route.path === '/renterMessage' }"
+                  @click="navigateTo('renterMessage')"
+                  >Messages</v-btn
+                >
                 <v-btn text class="nav-btn" @click="router.push('/profile')">Profile</v-btn>
               </v-row>
             </v-sheet>

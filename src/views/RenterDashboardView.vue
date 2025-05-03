@@ -37,19 +37,19 @@ function navigateTo(path) {
             <v-img src="/images/EBlogo.png" width="160" height="160" contain />
             <v-sheet class="nav-container px-6 py-2 ml-4" color="white">
               <v-row align="center" no-gutters>
-                <v-btn text class="nav-btn nav-btn-home">Home</v-btn>
+                <v-btn text class="nav-btn">Home</v-btn>
                 <v-btn
                   text
                   class="nav-btn"
                   :class="{ active: route.path === '/rentals' }"
-                  @click="navigateTo('/rentals')"
+                  @click="navigateTo('rentals')"
                   >Rentals</v-btn
                 >
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/messages' }"
-                  @click="navigateTo('/messages')"
+                  :class="{ active: route.path === '/renterMessage' }"
+                  @click="navigateTo('/renterMessage')"
                   >Messages</v-btn
                 >
                 <v-btn

@@ -9,7 +9,8 @@ import RentalsView from '@/views/RentalsView.vue'
 import RenteeRentalView from '@/views/auth/RenteeRentalView.vue'
 import RenteeMessagesView from '@/views/auth/RenteeMessagesView.vue'
 import RenteeProfileView from '@/views/auth/RenteeProfileView.vue'
-import RenteeMessengerView from '@/views/auth/RenteeMessengerView.vue'
+
+import RenterMessageView from '@/views/auth/RenterMessageView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,10 +65,11 @@ const router = createRouter({
       name: 'renteeProfile',
       component: RenteeProfileView,
     },
+
     {
-      path: '/renteeMessenger',
-      name: 'renteeMessenger',
-      component: RenteeMessengerView,
+      path: '/renterMessage',
+      name: 'renterMessage',
+      component: RenterMessageView,
     },
   ],
 })

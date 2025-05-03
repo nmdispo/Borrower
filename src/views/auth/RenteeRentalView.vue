@@ -244,6 +244,11 @@ function onClick() {
                         <v-col>
                           <v-card-text> Available: </v-card-text>
                         </v-col>
+                        <v-col>
+                          <v-row justify="space-around">
+                            <v-date-picker elevation="24"></v-date-picker>
+                          </v-row>
+                        </v-col>
                         <v-card-actions>
                           <v-spacer></v-spacer>
 
