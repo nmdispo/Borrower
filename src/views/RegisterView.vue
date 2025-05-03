@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { supabase, formActionDefault } from '@/utils/supabase.js'
 
 const theme = ref('light')
 const router = useRouter()
@@ -10,12 +11,11 @@ const lastName = ref('')
 const email = ref('')
 const phone = ref('')
 const address = ref('')
-
-// Password logic
 const actualPassword = ref('')
 const displayPassword = ref('')
 const actualConfirmPassword = ref('')
 const displayConfirmPassword = ref('')
+const formAction = ref({ ...formActionDefault })
 
 let passwordTimeout = null
 let confirmTimeout = null
@@ -25,22 +25,14 @@ function onClick() {
 }
 
 function handlePasswordInput(newVal) {
-  const oldVal = displayPassword.value
-  const oldLength = oldVal.length
+  const oldLength = displayPassword.value.length
   const newLength = newVal.length
-
   if (newLength < oldLength) {
-    // Deletion
     actualPassword.value = actualPassword.value.slice(0, newLength)
   } else {
-    // Addition
-    const addedChar = newVal[newLength - 1]
-    actualPassword.value += addedChar
+    actualPassword.value += newVal[newLength - 1]
   }
-
-  displayPassword.value =
-    '•'.repeat(newLength - 1) + actualPassword.value[actualPassword.value.length - 1]
-
+  displayPassword.value = '•'.repeat(newLength - 1) + actualPassword.value.slice(-1)
   clearTimeout(passwordTimeout)
   passwordTimeout = setTimeout(() => {
     displayPassword.value = '•'.repeat(actualPassword.value.length)
@@ -48,27 +40,23 @@ function handlePasswordInput(newVal) {
 }
 
 function handleConfirmPasswordInput(newVal) {
-  const oldVal = displayConfirmPassword.value
-  const oldLength = oldVal.length
+  const oldLength = displayConfirmPassword.value.length
   const newLength = newVal.length
-
   if (newLength < oldLength) {
     actualConfirmPassword.value = actualConfirmPassword.value.slice(0, newLength)
   } else {
-    const addedChar = newVal[newLength - 1]
-    actualConfirmPassword.value += addedChar
+    actualConfirmPassword.value += newVal[newLength - 1]
   }
-
-  displayConfirmPassword.value =
-    '•'.repeat(newLength - 1) + actualConfirmPassword.value[actualConfirmPassword.value.length - 1]
-
+  displayConfirmPassword.value = '•'.repeat(newLength - 1) + actualConfirmPassword.value.slice(-1)
   clearTimeout(confirmTimeout)
   confirmTimeout = setTimeout(() => {
     displayConfirmPassword.value = '•'.repeat(actualConfirmPassword.value.length)
   }, 1000)
 }
 
-function handleRegister() {
+async function handleRegister() {
+  formAction.value = { ...formActionDefault, formProcess: true }
+
   if (
     !firstName.value ||
     !lastName.value ||
@@ -78,32 +66,54 @@ function handleRegister() {
     !actualPassword.value ||
     !actualConfirmPassword.value
   ) {
-    alert('Please complete all fields.')
+    formAction.value.formErrorMessage = 'Please complete all fields.'
+    formAction.value.formProcess = false
     return
   }
 
   if (!email.value.includes('@') || !email.value.includes('.com')) {
-    alert('Please enter a valid email with "@" and ".com".')
+    formAction.value.formErrorMessage = 'Enter a valid email address.'
+    formAction.value.formProcess = false
     return
   }
 
   if (!/^\d{11}$/.test(phone.value)) {
-    alert('Phone number must be exactly 11 digits.')
+    formAction.value.formErrorMessage = 'Phone number must be 11 digits.'
+    formAction.value.formProcess = false
     return
   }
 
   if (actualPassword.value !== actualConfirmPassword.value) {
-    alert('Passwords do not match.')
+    formAction.value.formErrorMessage = 'Passwords do not match.'
+    formAction.value.formProcess = false
     return
   }
 
-  localStorage.setItem('userFirstName', firstName.value)
-  localStorage.setItem('userLastName', lastName.value)
-  localStorage.setItem('userEmail', email.value)
-  localStorage.setItem('userPhone', phone.value)
-  localStorage.setItem('userAddress', address.value)
+  const { error } = await supabase.auth.signUp({
+    email: email.value,
+    password: actualPassword.value,
+    options: {
+      data: {
+        full_name: `${firstName.value} ${lastName.value}`,
+        first_name: firstName.value,
+        last_name: lastName.value,
+        phone: phone.value,
+        address: address.value,
+        role: 'RENTER',
+        photo: null,
+      },
+    },
+  })
 
-  router.push('/') // redirect
+  if (error) {
+    formAction.value.formErrorMessage = error.message
+    formAction.value.formProcess = false
+    return
+  }
+
+  formAction.value.formSuccessMessage = 'Registration successful! Please verify your email.'
+  formAction.value.formProcess = false
+  router.push('/')
 }
 </script>
 
@@ -127,68 +137,37 @@ function handleRegister() {
               <h2 class="text-center mb-4">Register to EASY BORROW</h2>
 
               <v-form @submit.prevent="handleRegister">
-                <v-text-field
-                  v-model="firstName"
-                  label="First Name"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
-                />
-                <v-text-field
-                  v-model="lastName"
-                  label="Last Name"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
-                />
-                <v-text-field
-                  v-model="email"
-                  label="Email"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
-                />
-                <v-text-field
-                  v-model="phone"
-                  label="Phone Number"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
-                />
-                <v-text-field
-                  v-model="address"
-                  label="Address"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
-                />
-
+                <v-text-field v-model="firstName" label="First Name" />
+                <v-text-field v-model="lastName" label="Last Name" />
+                <v-text-field v-model="email" label="Email" />
+                <v-text-field v-model="phone" label="Phone Number" />
+                <v-text-field v-model="address" label="Address" />
                 <v-text-field
                   :model-value="displayPassword"
                   label="Password"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
                   @update:modelValue="handlePasswordInput"
                 />
-
                 <v-text-field
                   :model-value="displayConfirmPassword"
                   label="Confirm Password"
-                  variant="outlined"
-                  bg-color="yellow-lighten-1 rounded-lg"
                   @update:modelValue="handleConfirmPasswordInput"
                 />
-
-                <v-btn
-                  color="yellow-lighten-2"
-                  class="font-weight-bold mt-4 rounded-pill pa-6"
-                  type="submit"
-                  block
+                <v-btn :loading="formAction.formProcess" type="submit" block color="yellow-darken-2"
+                  >REGISTER NOW</v-btn
                 >
-                  REGISTER NOW
-                </v-btn>
               </v-form>
 
-              <v-divider class="my-5" />
+              <v-alert v-if="formAction.formErrorMessage" type="error" class="mt-4">
+                {{ formAction.formErrorMessage }}
+              </v-alert>
+              <v-alert v-if="formAction.formSuccessMessage" type="success" class="mt-4">
+                {{ formAction.formSuccessMessage }}
+              </v-alert>
 
-              <h5 class="text-center font-light" style="font-size: 18px">
+              <v-divider class="my-5" />
+              <h5 class="text-center">
                 Already have an account?
-                <RouterLink to="/" class="account-button">Click here to LOGIN</RouterLink>
+                <RouterLink to="/">Click here to LOGIN</RouterLink>
               </h5>
             </v-card>
           </v-col>
@@ -202,11 +181,5 @@ function handleRegister() {
 .account-button {
   text-decoration: none;
   font-weight: bold;
-}
-.theme--light .account-button {
-  color: black;
-}
-.theme--dark .account-button {
-  color: white;
 }
 </style>

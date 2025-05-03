@@ -1,114 +1,164 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { watchEffect } from 'vue'
+import { supabase } from '@/utils/supabase.js'
 
 const router = useRouter()
-const currentRentals = ref([])
-const viewIndex = ref(0) // 0: Add Item, 1: Listed Items, 2: Bookings
+const is_public = ref(true)
+const viewIndex = ref(0)
 
-const itemName = ref('')
-const photo = ref(null)
-const availableDates = ref([])
+const title = ref('')
+const images = ref(null)
+const available_dates = ref([])
 const quantity = ref(1)
-const rentalFee = ref('')
+const rental_fee = ref('')
+const location = ref('')
+const description = ref('')
 const editingIndex = ref(null)
+const owner_id = ref(null)
+const currentRentals = ref([])
 
 function handleUpload(e) {
   const file = e.target.files[0]
-  if (file) photo.value = URL.createObjectURL(file)
+  if (file) images.value = URL.createObjectURL(file)
 }
 
 function getDayClass(date) {
   const d = new Date(date)
   d.setHours(0, 0, 0, 0)
   const iso = d.toISOString().split('T')[0]
-  return availableDates.value.map((d) => new Date(d).toISOString().split('T')[0]).includes(iso)
+  return available_dates.value.map((d) => new Date(d).toISOString().split('T')[0]).includes(iso)
     ? 'available'
     : ''
 }
 
-function formatDateList(dates) {
-  return dates.map((date) => new Date(date).toLocaleDateString()).join(', ')
+function formatDateList(datesJson) {
+  try {
+    const dates = JSON.parse(datesJson)
+    return dates
+      .map((d) =>
+        new Date(d).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }),
+      )
+      .join(', ')
+  } catch {
+    return ''
+  }
 }
 
-function addToList() {
-  if (!availableDates.value.length) {
+async function addToList() {
+  if (!available_dates.value.length) {
     alert('Please select at least one available date.')
     return
   }
 
+  if (!owner_id.value) {
+    alert('User not authenticated. Please log in again.')
+    return
+  }
+
+  const formattedDates = available_dates.value.map((date) => new Date(date).toISOString())
   const newItem = {
-    name: itemName.value,
-    image: photo.value || '/images/sample-item.jpg',
-    rentalPeriod: formatDateList(availableDates.value),
+    title: title.value,
+    images: images.value || '/images/sample-item.jpg',
     quantity: quantity.value,
-    fee: rentalFee.value,
-    rawDates: [...availableDates.value],
+    rental_fee: rental_fee.value,
+    available_dates: JSON.stringify(formattedDates),
+    owner_id: owner_id.value,
+    location: location.value,
+    description: description.value,
   }
 
   if (editingIndex.value !== null) {
-    currentRentals.value[editingIndex.value] = newItem
+    const { error } = await supabase
+      .from('items')
+      .update(newItem)
+      .eq('id', currentRentals.value[editingIndex.value].id)
+    if (error) {
+      console.error('Update error:', error)
+      return alert('Error updating item.')
+    }
     editingIndex.value = null
   } else {
-    currentRentals.value.push(newItem)
+    const { error } = await supabase.from('items').insert([newItem])
+    if (error) {
+      console.error('Insert error:', error)
+      return alert('Error adding item. Check console.')
+    }
   }
 
-  localStorage.setItem('currentRentals', JSON.stringify(currentRentals.value))
-
   resetForm()
-  viewIndex.value = 1 // show listed items after adding
+  fetchRentals()
+  viewIndex.value = 1
 }
 
 function editItem(index) {
   const item = currentRentals.value[index]
-  itemName.value = item.name
-  photo.value = item.image
-  rentalFee.value = item.fee
+  title.value = item.title
+  images.value = item.images
+  rental_fee.value = item.rental_fee
   quantity.value = item.quantity
-  availableDates.value = item.rawDates || []
+  location.value = item.location || ''
+  description.value = item.description || ''
+  try {
+    available_dates.value = JSON.parse(item.available_dates || '[]')
+  } catch {
+    available_dates.value = []
+  }
   editingIndex.value = index
   viewIndex.value = 0
 }
 
 function resetForm() {
-  itemName.value = ''
-  photo.value = null
-  rentalFee.value = ''
+  title.value = ''
+  images.value = null
+  rental_fee.value = ''
   quantity.value = 1
-  availableDates.value = []
+  available_dates.value = []
+  location.value = ''
+  description.value = ''
   editingIndex.value = null
 }
 
-function deleteItem(index) {
-  if (confirm('Are you sure you want to delete this item?')) {
-    currentRentals.value.splice(index, 1)
-    localStorage.setItem('currentRentals', JSON.stringify(currentRentals.value))
-  }
+async function deleteItem(index) {
+  const confirmDelete = confirm('Are you sure you want to delete this item?')
+  if (!confirmDelete) return
+
+  const id = currentRentals.value[index].id
+  const { error } = await supabase.from('items').delete().eq('id', id)
+  if (!error) fetchRentals()
 }
 
 function handleKeyPress(e) {
-  if (e.key === 'ArrowLeft') {
-    viewIndex.value = (viewIndex.value + 2) % 3
-  } else if (e.key === 'ArrowRight') {
-    viewIndex.value = (viewIndex.value + 1) % 3
-  }
+  if (e.key === 'ArrowLeft') viewIndex.value = (viewIndex.value + 2) % 3
+  else if (e.key === 'ArrowRight') viewIndex.value = (viewIndex.value + 1) % 3
 }
 
 watchEffect(() => {
   const slideParam = router.currentRoute.value.query.slide
   const slideNum = parseInt(slideParam)
-
   if (!isNaN(slideNum) && slideNum >= 0 && slideNum <= 2) {
     viewIndex.value = slideNum
   }
 })
 
+async function fetchRentals() {
+  const { data: userData } = await supabase.auth.getUser()
+  owner_id.value = userData?.user?.id
+  const { data, error } = await supabase.from('items').select('*').eq('owner_id', owner_id.value)
+  if (!error) currentRentals.value = data
+}
+
 onMounted(() => {
-  const saved = localStorage.getItem('currentRentals')
-  currentRentals.value = saved ? JSON.parse(saved) : []
+  fetchRentals()
   window.addEventListener('keydown', handleKeyPress)
 })
 
@@ -118,6 +168,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <v-row class="mb-4">
+    <v-col cols="12" sm="6">
+      <v-switch v-model="is_public" label="Make this item public" />
+    </v-col>
+  </v-row>
+
   <v-app>
     <v-main>
       <v-container class="py-6">
@@ -129,8 +185,8 @@ onBeforeUnmount(() => {
               <v-row align="center" no-gutters>
                 <v-btn text class="nav-btn" @click="router.push('/renterdashboard')">Home</v-btn>
                 <v-btn text class="nav-btn nav-btn-home">Rentals</v-btn>
-                <v-btn text class="nav-btn" @click="router.push('/messages')">Messages</v-btn>
-                <v-btn text class="nav-btn" @click="router.push('/profile')">Profile</v-btn>
+                <v-btn text class="nav-btn" @click="router.push('/rentermessages')">Messages</v-btn>
+                <v-btn text class="nav-btn" @click="router.push('/renterprofile')">Profile</v-btn>
               </v-row>
             </v-sheet>
           </v-col>
@@ -159,25 +215,38 @@ onBeforeUnmount(() => {
 
           <v-row class="mb-4">
             <v-col cols="12" sm="6">
-              <v-text-field v-model="itemName" label="Item Name" />
+              <v-text-field v-model="title" label="Item Name" />
             </v-col>
             <v-col cols="12" sm="3">
               <v-text-field v-model="quantity" type="number" label="Quantity" />
             </v-col>
             <v-col cols="12" sm="3">
-              <v-text-field v-model="rentalFee" type="number" prefix="₱" label="Rental Fee" />
+              <v-text-field v-model="rental_fee" type="number" prefix="₱" label="Rental Fee" />
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-text-field v-model="location" label="Location" />
+            </v-col>
+          </v-row>
+
+          <v-row class="mb-4">
+            <v-col cols="12">
+              <v-textarea v-model="description" label="Item Description" rows="3" />
             </v-col>
           </v-row>
 
           <v-row class="mb-4">
             <v-col cols="12" sm="6">
               <v-file-input label="Upload Photo" accept="image/*" @change="handleUpload" />
-              <v-img v-if="photo" :src="photo" class="mt-2 rounded-lg" height="120" cover />
+              <v-img v-if="images" :src="images" class="mt-2 rounded-lg" height="120" cover />
             </v-col>
             <v-col cols="12" sm="6">
               <div class="calendar-box pa-4">
                 <div class="calendar-header mb-2">Select Available Dates</div>
-                <Datepicker v-model="availableDates" :multi-dates="true" :day-class="getDayClass" />
+                <Datepicker
+                  v-model="available_dates"
+                  :multi-dates="true"
+                  :day-class="getDayClass"
+                />
                 <p class="text-caption mt-2">Click a date to toggle availability</p>
               </div>
             </v-col>
@@ -203,12 +272,16 @@ onBeforeUnmount(() => {
                 color="white"
               >
                 <div class="d-flex align-center item-clickable" @click="editItem(i)">
-                  <v-img :src="it.image" width="120" height="120" class="rounded-lg" cover />
+                  <v-img :src="it.images" width="120" height="120" class="rounded-lg" cover />
                   <v-col class="item-info">
-                    <div class="font-weight-bold mb-1 text-lg">{{ it.name }}</div>
-                    <div class="mb-1">Available date(s): {{ it.rentalPeriod }}</div>
-                    <div class="mb-1">Rental Fee: ₱{{ it.fee }}</div>
-                    <div>Quantity: {{ it.quantity }}</div>
+                    <div class="font-weight-bold mb-1 text-lg">{{ it.title }}</div>
+                    <div class="mb-1">
+                      Available date(s): {{ formatDateList(it.available_dates) }}
+                    </div>
+                    <div class="mb-1">Rental Fee: ₱{{ it.rental_fee }}</div>
+                    <div class="mb-1">Location: {{ it.location }}</div>
+                    <div class="mb-1">Quantity: {{ it.quantity }}</div>
+                    <div class="mb-1">Description: {{ it.description }}</div>
                   </v-col>
                 </div>
                 <v-btn icon color="red" @click.stop="deleteItem(i)">

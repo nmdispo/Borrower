@@ -1,29 +1,39 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { supabase } from '@/utils/supabase.js'
 
 const theme = ref('light')
 const router = useRouter()
 const route = useRoute()
 
-const userFirstName = ref('')
+const userFirstName = ref('User')
 const currentRentals = ref([])
 
-onMounted(() => {
-  const storedName = localStorage.getItem('userFirstName')
-  userFirstName.value = storedName
+onMounted(async () => {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-  const savedItems = localStorage.getItem('currentRentals')
-  currentRentals.value = savedItems ? JSON.parse(savedItems) : []
-})
+  if (user) {
+    const metadata = user.user_metadata
+    if (metadata && metadata.first_name) {
+      userFirstName.value = metadata.first_name
+    }
 
-onMounted(() => {
-  const storedName = localStorage.getItem('userFirstName')
-  userFirstName.value = storedName ? storedName : 'User'
+    const { data: rentals } = await supabase.from('items').select('*').eq('owner_id', user.id)
+
+    currentRentals.value = rentals || []
+  }
 })
 
 function navigateTo(path) {
   router.push(path)
+}
+
+function goToListedItem(itemId) {
+  router.push({ path: '/rentals', query: { slide: '1', focus: itemId } })
 }
 </script>
 
@@ -48,15 +58,15 @@ function navigateTo(path) {
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/messages' }"
-                  @click="navigateTo('/messages')"
+                  :class="{ active: route.path === '/rentermessages' }"
+                  @click="navigateTo('/rentermessages')"
                   >Messages</v-btn
                 >
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/profile' }"
-                  @click="navigateTo('/profile')"
+                  :class="{ active: route.path === '/renterprofile' }"
+                  @click="navigateTo('/renterprofile')"
                   >Profile</v-btn
                 >
               </v-row>
@@ -88,15 +98,10 @@ function navigateTo(path) {
             </router-link>
 
             <router-link
-              :to="{ path: '/rentals', query: { slide: 'bookings' } }"
+              :to="{ path: '/rentals', query: { slide: '2' } }"
               style="text-decoration: none"
             >
-              <v-btn
-                class="nav-btn mx-4 px-10 py-4"
-                @click="router.push({ path: '/rentals', query: { slide: 2 } })"
-              >
-                View Bookings
-              </v-btn>
+              <v-btn class="nav-btn mx-4 px-10 py-4">View Bookings</v-btn>
             </router-link>
           </v-row>
 
@@ -116,12 +121,27 @@ function navigateTo(path) {
 
           <v-row justify="center" class="mt-4" dense>
             <v-col cols="12" sm="6" md="4" v-for="(rental, index) in currentRentals" :key="index">
-              <v-card class="rental-card pa-4" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
-                <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
+              <v-card
+                class="rental-card pa-4"
+                elevation="3"
+                @click="goToListedItem(rental.id)"
+                style="cursor: pointer"
+              >
+                <v-img :src="rental.images || rental.image" height="160" cover></v-img>
+                <v-card-title class="rental-title mt-2">
+                  {{ rental.title || rental.name }}
+                </v-card-title>
                 <v-card-text class="rental-info">
-                  <div><strong>Rental Date:</strong> {{ rental.rentalPeriod }}</div>
-                  <div><strong>Rental Fee:</strong> {{ rental.fee }}</div>
+                  <div><strong>Rental Fee:</strong> ₱{{ rental.rental_fee || rental.fee }}</div>
+                  <div><strong>Quantity:</strong> {{ rental.quantity }}</div>
+                  <div>
+                    <strong>Available Dates:</strong>
+                    {{
+                      (rental.available_dates && JSON.parse(rental.available_dates))
+                        ?.map((date) => new Date(date).toLocaleDateString())
+                        .join(', ') || 'N/A'
+                    }}
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>

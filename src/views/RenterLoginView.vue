@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { supabase } from '@/utils/supabase.js' // adjust this path to your actual Supabase client
 
 const theme = ref('light')
 const schoolId = ref('')
@@ -16,10 +17,28 @@ function onSchoolIdInput(event) {
   schoolId.value = input.replace(/[^0-9-]/g, '')
 }
 
-// Handle login with validation
-function handleLogin() {
+// Handle login with School ID validation and Supabase metadata update
+async function handleLogin() {
   if (!schoolId.value) {
     alert('Please enter your School ID.')
+    return
+  }
+
+  const {
+    data: { user },
+    error: getUserError,
+  } = await supabase.auth.getUser()
+  if (getUserError || !user) {
+    alert('Failed to get user info. Are you logged in?')
+    return
+  }
+
+  const { error: updateError } = await supabase.auth.updateUser({
+    data: { school_id: schoolId.value },
+  })
+
+  if (updateError) {
+    alert('Failed to update School ID.')
     return
   }
 
