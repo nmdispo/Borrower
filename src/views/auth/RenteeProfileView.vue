@@ -7,10 +7,17 @@ const router = useRouter()
 const route = useRoute()
 
 const userFirstName = ref('')
+const profileImage = ref('/images/default-profile.png') // Default image path
 
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
   userFirstName.value = storedName ? storedName : 'Ella'
+
+  //  Load profile image from local storage if available
+  const storedImage = localStorage.getItem('profileImage')
+  if (storedImage) {
+    profileImage.value = storedImage
+  }
 })
 
 function navigateTo(path) {
@@ -27,13 +34,27 @@ function onClick() {
     loaded.value = true
   }, 2000)
 }
+
+// Function to handle profile image selection
+const selectProfileImage = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      profileImage.value = e.target.result
+      localStorage.setItem('profileImage', e.target.result) // Save to local storage
+    }
+
+    reader.readAsDataURL(file)
+  }
+}
 </script>
 
 <template>
   <v-app :theme="theme">
     <v-main>
       <v-container fluid class="py-6">
-        <!-- Navigation -->
         <v-row justify="center" align="center" class="mb-6">
           <v-col cols="auto" class="d-flex align-center">
             <v-img src="/images/EBlogo.png" width="160" height="160" contain />
@@ -44,29 +65,33 @@ function onClick() {
                   class="nav-btn"
                   :class="{ active: route.path === '/renteelogin' }"
                   @click="navigateTo('renteelogin')"
-                  >Home</v-btn
                 >
+                  Home
+                </v-btn>
                 <v-btn
                   text
                   class="nav-btn"
                   :class="{ active: route.path === '/renteeRentals' }"
                   @click="navigateTo('renteeRentals')"
-                  >Rentals</v-btn
                 >
+                  Rentals
+                </v-btn>
                 <v-btn
                   text
                   class="nav-btn"
                   :class="{ active: route.path === '/renteeMessages' }"
                   @click="navigateTo('renteeMessages')"
-                  >Messages</v-btn
                 >
+                  Messages
+                </v-btn>
                 <v-btn
                   text
                   class="nav-btn"
                   :class="{ active: route.path === '/renteeProfile' }"
                   @click="navigateTo('/renteeProfile')"
-                  >Profile</v-btn
                 >
+                  Profile
+                </v-btn>
               </v-row>
             </v-sheet>
           </v-col>
@@ -99,20 +124,74 @@ function onClick() {
             <h2 class="hello-text">Profile</h2>
           </v-row>
 
-          <!-- Welcome Text -->
-
-          <!-- Black Line -->
-
           <v-row justify="center" class="mb-8">
             <div
               class="custom-divider mx-auto"
               style="border-top: 3px solid black; width: 95%"
             ></div>
           </v-row>
-          <v-row>
-            <div></div>
+          <v-row justify="center">
+            <v-col cols="auto">
+              <div class="d-flex flex-column align-center">
+                <v-avatar size="200" class="mb-2">
+                  <v-img
+                    src="/images/profilepic.jpeg"
+                    alt="Profile"
+                    cover
+                    aspect-ratio="16/3"
+                  ></v-img>
+                </v-avatar>
+                <div class="d-flex">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    @change="selectProfileImage"
+                    style="display: none"
+                    ref="profileImageInput"
+                  />
+                  <v-btn icon @click="$refs.profileImageInput.click()">
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </div>
+                <h1 class="text-center" style="font-size: 30px">Queen- Anns Sajolga</h1>
+                <h2 class="text-center" style="font-size: 20px">queenanns.07@gmail.com</h2>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row justify="center" class="mb-8">
+            <div
+              class="custom-divider mx-auto"
+              style="border-top: 3px solid black; width: 95%"
+            ></div>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h2 class="section-title" style="padding-left: 50px">Profile Information</h2>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h3 class="section-title" style="padding-left: 50px">Password and Security</h3>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h4 class="section-title" style="padding-left: 50px">Activity Log</h4>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h5 class="section-title" style="padding-left: 50px">Business Integration</h5>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <h6 class="section-title" style="padding-left: 50px">Community Standard</h6>
+          </v-row>
+          <v-row justify="start" class="mb-6">
+            <v-icon
+              icon="mdi-delete-forever"
+              size="x-large"
+              class="mr-4"
+              style="padding-left: 16px; color: red; margin-top: 8px"
+            ></v-icon>
+            <h6 class="section-title" style="color: red">Delete account</h6>
           </v-row>
         </div>
+        <v-row justify="center" class="mb-8">
+          <div class="custom-divider mx-auto" style="border-top: 3px solid black; width: 95%"></div>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>
