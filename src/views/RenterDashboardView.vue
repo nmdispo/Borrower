@@ -45,13 +45,7 @@ function navigateTo(path) {
                   @click="navigateTo('rentals')"
                   >Rentals</v-btn
                 >
-                <v-btn
-                  text
-                  class="nav-btn"
-                  :class="{ active: route.path === '/renterMessage' }"
-                  @click="navigateTo('/renterMessage')"
-                  >Messages</v-btn
-                >
+
                 <v-btn
                   text
                   class="nav-btn"
