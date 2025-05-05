@@ -12,94 +12,83 @@ const userFirstName = ref('')
 const valueRentals = ref([
   {
     name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
+    image: '/images/electricdrill.jpg',
     rentalFee: '150.00',
   },
   {
     name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
+    image: '/images/mountainbike2.jpg',
     rentalFee: '30.00',
   },
   {
     name: 'Prom Dress',
-    image: '/images/sample-item.jpg',
+    image: '/images/promdress.jpg',
     rentalFee: '1500.00',
   },
   {
     name: 'Rain Boots',
-    image: '/images/sample-item.jpg',
+    image: '/images/rainboots2.jpg',
     rentalFee: '70.00',
   },
   {
     name: 'E-bikes',
-    image: '/images/sample-item.jpg',
+    image: '/images/ebike2.jpg',
     rentalFee: '50.00',
   },
   {
     name: 'Filipiniana',
-    image: '/images/sample-item.jpg',
+    image: '/images/filipiniana2.jpg',
     rentalFee: '300.00',
   },
   {
     name: 'Chemistry Book',
-    image: '/images/sample-item.jpg',
-    rentalFee: '30.00',
-  },
-  {
-    name: 'Karaoke Machine',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/chemistrybook2.jpg',
+    rentalFee: '60.00',
   },
   {
     name: 'Chairs & Tables',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/chairstable.jpg',
+    rentalFee: '400.00',
   },
   {
-    name: 'Vans',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    name: 'Camping Chair',
+    image: '/images/campingchair.jpg',
+    rentalFee: '120.00',
   },
-
   {
-    name: 'Laboratory Gown',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    name: 'Chairs & Tables',
+    image: '/images/chairstable.jpg',
+    rentalFee: '400.00',
   },
   {
     name: 'Scientific Calculator',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/scical2.jpg',
+    rentalFee: '30.00',
   },
   {
     name: 'Arnis Stick',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/arnis.jpg',
+    rentalFee: '15.00',
   },
   {
     name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/tent.jpg',
+    rentalFee: '270.00',
   },
   {
     name: 'Safety Vest ',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/vest.jpg',
+    rentalFee: '20.00',
   },
   {
-    name: 'Power Bank ',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    name: 'Laboratory Gown',
+    image: '/images/labgown.jpg',
+    rentalFee: '50.00',
   },
   {
-    name: 'Safety Goggles ',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
-  },
-  {
-    name: 'Sound System',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    name: 'Camera',
+    image: '/images/camera.jpg',
+    rentalFee: '500.00',
   },
 ])
 
@@ -148,13 +137,7 @@ function onClick() {
                   @click="navigateTo('renteeRentals')"
                   >Rentals</v-btn
                 >
-                <v-btn
-                  text
-                  class="nav-btn"
-                  :class="{ active: route.path === '/renteeMessages' }"
-                  @click="navigateTo('renteeMessages')"
-                  >Messages</v-btn
-                >
+
                 <v-btn
                   text
                   class="nav-btn"
@@ -209,9 +192,9 @@ function onClick() {
           </v-row>
 
           <v-row justify="center" class="mt-4" dense>
-            <v-col cols="12" sm="6" md="4" v-for="(rental, index) in valueRentals" :key="index">
-              <v-card class="rental-card pa-5" elevation="3">
-                <v-img :src="rental.image" height="160" cover></v-img>
+            <v-col cols="12" sm="6" md="3" v-for="(rental, index) in valueRentals" :key="index">
+              <v-card class="rental-card pa-6" elevation="3">
+                <v-img :src="rental.image" height="200" style="object-fit: contain"></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
                   <v-dialog max-width="500">

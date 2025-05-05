@@ -76,14 +76,7 @@ const selectProfileImage = (event) => {
                 >
                   Rentals
                 </v-btn>
-                <v-btn
-                  text
-                  class="nav-btn"
-                  :class="{ active: route.path === '/renteeMessages' }"
-                  @click="navigateTo('renteeMessages')"
-                >
-                  Messages
-                </v-btn>
+
                 <v-btn
                   text
                   class="nav-btn"

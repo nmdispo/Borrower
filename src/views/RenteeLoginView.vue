@@ -12,27 +12,27 @@ const userFirstName = ref('')
 const valueRentals = ref([
   {
     name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
+    image: '/images/electricdrill.jpg',
     rentalFee: '150.00',
   },
   {
     name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/mountainbike2.jpg',
+    rentalFee: '70.00',
   },
   {
     name: 'Prom Dress',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/promdress.jpg',
+    rentalFee: '300.00',
   },
   {
     name: 'Rain Boots',
-    image: '/images/sample-item.jpg',
-    rentalFee: '150.00',
+    image: '/images/rainboots2.jpg',
+    rentalFee: '20.00',
   },
   {
     name: 'E-bikes',
-    image: '/images/sample-item.jpg',
+    image: '/images/ebike2.jpg',
     rentalFee: '150.00',
   },
 ])
@@ -40,46 +40,56 @@ const valueRentals = ref([
 const nearbyRentals = ref([
   {
     name: 'Filipiniana',
-    image: '/images/sample-item.jpg',
+    image: '/images/filipiniana2.jpg',
+    rentalFee: '250.00',
   },
   {
     name: 'Chemistry Book',
-    image: '/images/sample-item.jpg',
+    image: '/images/chemistrybook2.jpg',
+    rentalFee: '60.00',
   },
   {
-    name: 'Karaoke Machine',
-    image: '/images/sample-item.jpg',
+    name: 'Camping Chair',
+    image: '/images/campingchair.jpg',
+    rentalFee: '120.00',
   },
   {
     name: 'Chairs & Tables',
-    image: '/images/sample-item.jpg',
+    image: '/images/chairstable.jpg',
+    rentalFee: '400.00',
   },
   {
-    name: 'Vans',
-    image: '/images/sample-item.jpg',
+    name: 'Camera',
+    image: '/images/camera.jpg',
+    rentalFee: '500.00',
   },
 ])
 
 const availabilityRentals = ref([
   {
     name: 'Laboratory Gown',
-    image: '/images/sample-item.jpg',
+    image: '/images/labgown.jpg',
+    rentalFee: '50.00',
   },
   {
     name: 'Scientific Calculator',
-    image: '/images/sample-item.jpg',
+    image: '/images/scical2.jpg',
+    rentalFee: '30.00',
   },
   {
     name: 'Arnis Stick',
-    image: '/images/sample-item.jpg',
+    image: '/images/arnis.jpg',
+    rentalFee: '15.00',
   },
   {
     name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
+    image: '/images/tent.jpg',
+    rentalFee: '270.00',
   },
   {
     name: 'Safety Vest ',
-    image: '/images/sample-item.jpg',
+    image: '/images/vest.jpg',
+    rentalFee: '20.00',
   },
 ])
 
@@ -111,13 +121,7 @@ function navigateTo(path) {
                   @click="navigateTo('renteeRentals')"
                   >Rentals</v-btn
                 >
-                <v-btn
-                  text
-                  class="nav-btn"
-                  :class="{ active: route.path === '/renteeMessages' }"
-                  @click="navigateTo('renteeMessages')"
-                  >Messages</v-btn
-                >
+
                 <v-btn
                   text
                   class="nav-btn"
@@ -158,13 +162,13 @@ function navigateTo(path) {
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <v-dialog max-width="500">
+                  <v-dialog max-width="400">
                     <template v-slot:activator="{ props: activatorProps }">
                       <v-btn
                         color="yellow-lighten-2"
                         class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
                         v-bind="activatorProps"
-                        text="View price"
+                        text="View details"
                         variant="flat"
                         block
                       ></v-btn>
@@ -172,7 +176,7 @@ function navigateTo(path) {
 
                     <template v-slot:default="{ isActive }">
                       <v-card class="text-center">
-                        <v-card-title class="font-weight-bold">ITEM PRICE</v-card-title>
+                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
                         <v-row>
                           <v-col>
                             <v-card-text>
@@ -180,7 +184,6 @@ function navigateTo(path) {
                             >
                           </v-col>
                         </v-row>
-
                         <v-card-actions>
                           <v-spacer></v-spacer>
 
@@ -212,13 +215,13 @@ function navigateTo(path) {
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <v-dialog max-width="500">
+                  <v-dialog max-width="400">
                     <template v-slot:activator="{ props: activatorProps }">
                       <v-btn
                         color="yellow-lighten-2"
                         class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
                         v-bind="activatorProps"
-                        text="View price"
+                        text="View details"
                         variant="flat"
                         block
                       ></v-btn>
@@ -226,11 +229,11 @@ function navigateTo(path) {
 
                     <template v-slot:default="{ isActive }">
                       <v-card class="text-center">
-                        <v-card-title class="font-weight-bold">ITEM PRICE</v-card-title>
+                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
                         <v-row>
                           <v-col>
                             <v-card-text>
-                              Rental fee: <br />₱{{ valueRentals[index].rentalFee }}</v-card-text
+                              Rental fee: <br />₱{{ nearbyRentals[index].rentalFee }}</v-card-text
                             >
                           </v-col>
                         </v-row>
@@ -271,13 +274,13 @@ function navigateTo(path) {
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <v-dialog max-width="500">
+                  <v-dialog max-width="400">
                     <template v-slot:activator="{ props: activatorProps }">
                       <v-btn
                         color="yellow-lighten-2"
                         class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
                         v-bind="activatorProps"
-                        text="View price"
+                        text="View details"
                         variant="flat"
                         block
                       ></v-btn>
@@ -285,15 +288,16 @@ function navigateTo(path) {
 
                     <template v-slot:default="{ isActive }">
                       <v-card class="text-center">
-                        <v-card-title class="font-weight-bold">ITEM PRICE</v-card-title>
+                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
                         <v-row>
                           <v-col>
                             <v-card-text>
-                              Rental fee: <br />₱{{ valueRentals[index].rentalFee }}</v-card-text
+                              Rental fee: <br />₱{{
+                                availabilityRentals[index].rentalFee
+                              }}</v-card-text
                             >
                           </v-col>
                         </v-row>
-
                         <v-card-actions>
                           <v-spacer></v-spacer>
 
