@@ -10,7 +10,7 @@ const theme = ref('light')
       <v-app
         :theme="theme"
         :style="{
-          backgroundImage: `url('/public/images/bg.jpg')`,
+          backgroundImage: url('/public/images/bg.jpg'),
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }"

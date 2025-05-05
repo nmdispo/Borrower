@@ -16,7 +16,6 @@ const form = ref({
   phone: '',
   address: '',
   role: '',
-  school_id: '',
   photo: '',
 })
 
@@ -35,7 +34,6 @@ onMounted(async () => {
     phone: userMeta.value.phone || '',
     address: userMeta.value.address || '',
     role: userMeta.value.role || '',
-    school_id: userMeta.value.school_id || '',
     photo: '',
   }
 
@@ -108,7 +106,6 @@ const saveProfile = async () => {
       phone: form.value.phone,
       address: form.value.address,
       role: form.value.role,
-      school_id: form.value.school_id,
     },
   })
 
@@ -133,8 +130,8 @@ const saveProfile = async () => {
             <v-img src="/images/EBlogo.png" width="160" height="160" contain />
             <v-sheet class="nav-container px-6 py-2 ml-4" color="white">
               <v-row align="center" no-gutters>
-                <v-btn text class="nav-btn" @click="navigateTo('/renterdashboard')">Home</v-btn>
-                <v-btn text class="nav-btn" @click="navigateTo('/rentals')">Rentals</v-btn>
+                <v-btn text class="nav-btn" @click="navigateTo('/renteelogin')">Home</v-btn>
+                <v-btn text class="nav-btn" @click="navigateTo('/renteeRentals')">Rentals</v-btn>
                 <v-btn text class="nav-btn nav-btn-active">Profile</v-btn>
               </v-row>
             </v-sheet>
@@ -188,12 +185,6 @@ const saveProfile = async () => {
               class="mb-4"
             />
             <v-text-field v-model="form.role" label="Role" :readonly="!editable" class="mb-4" />
-            <v-text-field
-              v-model="form.school_id"
-              label="School ID"
-              :readonly="!editable"
-              class="mb-4"
-            />
 
             <!-- Buttons -->
             <v-row justify="center" class="mt-4">

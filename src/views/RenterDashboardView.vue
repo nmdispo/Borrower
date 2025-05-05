@@ -55,13 +55,7 @@ function goToListedItem(itemId) {
                   @click="navigateTo('/rentals')"
                   >Rentals</v-btn
                 >
-                <v-btn
-                  text
-                  class="nav-btn"
-                  :class="{ active: route.path === '/rentermessages' }"
-                  @click="navigateTo('/rentermessages')"
-                  >Messages</v-btn
-                >
+
                 <v-btn
                   text
                   class="nav-btn"

@@ -16,10 +16,6 @@ const roles = ref([
   { title: 'RENTER', route: '/renterlogin' },
 ])
 
-function toggleTheme() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
 function handlePasswordInput(e) {
   const newChar = e.data || ''
   const newValue = e.target.value
@@ -65,15 +61,6 @@ async function login(role) {
 <template>
   <v-responsive class="border rounded">
     <v-app :theme="theme">
-      <v-app-bar class="px-3">
-        <v-spacer />
-        <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          slim
-          @click="toggleTheme"
-        />
-      </v-app-bar>
-
       <v-app
         :style="{
           backgroundImage: `url('/images/yellowback.jpg')`,
@@ -109,10 +96,6 @@ async function login(role) {
                       bg-color="yellow-lighten-1 rounded-lg elevation-5"
                       @input="handlePasswordInput"
                     />
-
-                    <h4 class="text-center font-semibold" style="font-size: 15px">
-                      Forgot Password?
-                    </h4>
 
                     <div class="text-center mt-6">
                       <v-menu open-on-click>

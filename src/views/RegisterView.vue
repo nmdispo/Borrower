@@ -20,10 +20,6 @@ const formAction = ref({ ...formActionDefault })
 let passwordTimeout = null
 let confirmTimeout = null
 
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
 function handlePasswordInput(newVal) {
   const oldLength = displayPassword.value.length
   const newLength = newVal.length
@@ -119,15 +115,6 @@ async function handleRegister() {
 
 <template>
   <v-app :theme="theme">
-    <v-app-bar class="px-3">
-      <v-spacer></v-spacer>
-      <v-btn
-        :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-        slim
-        @click="onClick"
-      />
-    </v-app-bar>
-
     <v-main>
       <v-container>
         <v-row>

@@ -12,75 +12,89 @@ const userFirstName = ref('')
 const valueRentals = ref([
   {
     name: 'Electric Drill',
-    image: '/images/sample-item.jpg',
+    image: '/images/electricdrill.jpg',
+    rentalFee: '150.00',
   },
   {
     name: 'Mountain Bike',
-    image: '/images/sample-item.jpg',
+    image: '/images/mountainbike2.jpg',
+    rentalFee: '70.00',
   },
   {
     name: 'Prom Dress',
-    image: '/images/sample-item.jpg',
+    image: '/images/promdress.jpg',
+    rentalFee: '300.00',
   },
   {
     name: 'Rain Boots',
-    image: '/images/sample-item.jpg',
+    image: '/images/rainboots2.jpg',
   },
   {
     name: 'E-bikes',
-    image: '/images/sample-item.jpg',
+    image: '/images/ebike2.jpg',
+    rentalFee: '150.00',
   },
 ])
 
 const nearbyRentals = ref([
   {
     name: 'Filipiniana',
-    image: '/images/sample-item.jpg',
+    image: '/images/filipiniana2.jpg',
+    location: 'Baan Km. 3',
   },
   {
     name: 'Chemistry Book',
-    image: '/images/sample-item.jpg',
+    image: '/images/chemistrybook2.jpg',
+    location: 'Ampayon',
   },
   {
     name: 'Karaoke Machine',
-    image: '/images/sample-item.jpg',
+    image: '/images/karaoke.jpg',
+    location: 'Camella Homes',
   },
   {
     name: 'Chairs & Tables',
-    image: '/images/sample-item.jpg',
+    image: '/images/chairstable.jpg',
+    location: 'Lumina',
   },
   {
     name: 'Vans',
-    image: '/images/sample-item.jpg',
+    image: '/images/vans.jpg',
+    location: 'BMC',
   },
 ])
 
 const availabilityRentals = ref([
   {
     name: 'Laboratory Gown',
-    image: '/images/sample-item.jpg',
+    image: '/images/labgown.jpg',
+    availdate: 'May 23-25, 2025',
   },
   {
     name: 'Scientific Calculator',
-    image: '/images/sample-item.jpg',
+    image: '/images/scical2.jpg',
+    availdate: 'May 16 &17, 2025',
   },
   {
     name: 'Arnis Stick',
-    image: '/images/sample-item.jpg',
+    image: '/images/arnis.jpg',
+    availdate: 'May 20,2025',
   },
   {
     name: 'Tent 4-Person',
-    image: '/images/sample-item.jpg',
+    image: '/images/tent.jpg',
+    availdate: 'May 14-23, 2025',
   },
   {
     name: 'Safety Vest ',
-    image: '/images/sample-item.jpg',
+    image: '/images/vest.jpg',
+    availdate: 'May 10-15, 2025',
   },
 ])
 
 onMounted(() => {
   const storedName = localStorage.getItem('userFirstName')
-  userFirstName.value = storedName ? storedName : 'Ella'
+  userFirstName.value = storedName ? storedName : 'Nikki'
 })
 
 function navigateTo(path) {
@@ -109,15 +123,8 @@ function navigateTo(path) {
                 <v-btn
                   text
                   class="nav-btn"
-                  :class="{ active: route.path === '/messages' }"
-                  @click="navigateTo('/messages')"
-                  >Messages</v-btn
-                >
-                <v-btn
-                  text
-                  class="nav-btn"
-                  :class="{ active: route.path === '/profile' }"
-                  @click="navigateTo('/profile')"
+                  :class="{ active: route.path === '/renteeprofile' }"
+                  @click="navigateTo('/renteeprofile')"
                   >Profile</v-btn
                 >
               </v-row>
@@ -130,7 +137,7 @@ function navigateTo(path) {
             <div class="custom-divider mx-auto"></div>
           </v-row>
           <v-row justify="center" class="mb-4">
-            <h2 class="hello-text">HELLO, {{ userFirstName.toUpperCase() }}!</h2>
+            <h2 class="hello-text">HELLO, NIKKI!</h2>
           </v-row>
 
           <!-- Welcome Text -->
@@ -153,15 +160,45 @@ function navigateTo(path) {
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <div>
-                    <v-btn
-                      color="yellow-lighten-2"
-                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
-                      type="submit"
-                      block
-                      >View price
-                    </v-btn>
-                  </div>
+                  <v-dialog max-width="400">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn
+                        color="yellow-lighten-2"
+                        class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
+                        v-bind="activatorProps"
+                        text="View details"
+                        variant="flat"
+                        block
+                      ></v-btn>
+                    </template>
+
+                    <template v-slot:default="{ isActive }">
+                      <v-card class="text-center">
+                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
+                        <v-row>
+                          <v-col>
+                            <v-card-text>
+                              Rental fee: <br />₱{{ valueRentals[index].rentalFee }}</v-card-text
+                            >
+                          </v-col>
+                        </v-row>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+
+                          <v-btn
+                            color="yellow-lighten-2"
+                            class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
+                            v-bind="activatorProps"
+                            text="EXIT"
+                            variant="flat"
+                            block
+                            @click="isActive.value = false"
+                          ></v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </template>
+                  </v-dialog>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -177,15 +214,45 @@ function navigateTo(path) {
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <div>
-                    <v-btn
-                      color="yellow-lighten-2"
-                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
-                      type="submit"
-                      block
-                      >View location
-                    </v-btn>
-                  </div>
+                  <v-dialog max-width="400">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn
+                        color="yellow-lighten-2"
+                        class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
+                        v-bind="activatorProps"
+                        text="View details"
+                        variant="flat"
+                        block
+                      ></v-btn>
+                    </template>
+
+                    <template v-slot:default="{ isActive }">
+                      <v-card class="text-center">
+                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
+                        <v-row>
+                          <v-col>
+                            <v-card-text>
+                              Location: <br />{{ nearbyRentals[index].location }}</v-card-text
+                            >
+                          </v-col>
+                        </v-row>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+
+                          <v-btn
+                            color="yellow-lighten-2"
+                            class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
+                            v-bind="activatorProps"
+                            text="EXIT"
+                            variant="flat"
+                            block
+                            @click="isActive.value = false"
+                          ></v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </template>
+                  </v-dialog>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -206,15 +273,47 @@ function navigateTo(path) {
                 <v-img :src="rental.image" height="160" cover></v-img>
                 <v-card-title class="rental-title mt-2">{{ rental.name }}</v-card-title>
                 <v-card-text class="rental-info">
-                  <div>
-                    <v-btn
-                      color="yellow-lighten-2"
-                      class="font-weight-bold mt-1 rounded-pill mx-auto pa-4"
-                      type="submit"
-                      block
-                      >View availability
-                    </v-btn>
-                  </div>
+                  <v-dialog max-width="400">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn
+                        color="yellow-lighten-2"
+                        class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
+                        v-bind="activatorProps"
+                        text="View details"
+                        variant="flat"
+                        block
+                      ></v-btn>
+                    </template>
+
+                    <template v-slot:default="{ isActive }">
+                      <v-card class="text-center">
+                        <v-card-title class="font-weight-bold">ITEM DETAILS</v-card-title>
+                        <v-row>
+                          <v-col>
+                            <v-card-text>
+                              Available Dates: <br />{{
+                                availabilityRentals[index].availdate
+                              }}</v-card-text
+                            >
+                          </v-col>
+                        </v-row>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+
+                          <v-btn
+                            color="yellow-lighten-2"
+                            class="font-weight-bold mt-2 rounded-pill mx-auto pa-2"
+                            v-bind="activatorProps"
+                            text="EXIT"
+                            variant="flat"
+                            block
+                            @click="isActive.value = false"
+                          ></v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </template>
+                  </v-dialog>
                 </v-card-text>
               </v-card>
             </v-col>

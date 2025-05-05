@@ -7,10 +7,6 @@ const theme = ref('light')
 const schoolId = ref('')
 const router = useRouter()
 
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
 // Only allow numbers and dashes
 function onSchoolIdInput(event) {
   const input = event.target.value
@@ -49,15 +45,6 @@ async function handleLogin() {
 <template>
   <v-responsive class="border rounded">
     <v-app :theme="theme">
-      <v-app-bar class="px-3">
-        <v-spacer></v-spacer>
-        <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          slim
-          @click="onClick"
-        ></v-btn>
-      </v-app-bar>
-
       <v-responsive class="border rounded">
         <v-app
           :theme="theme"
