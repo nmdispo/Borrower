@@ -6,110 +6,86 @@ import { supabase, formActionDefault } from '@/utils/supabase.js'
 const theme = ref('light')
 const router = useRouter()
 
-const firstName = ref('')
-const lastName = ref('')
-const email = ref('')
-const phone = ref('')
-const address = ref('')
-const actualPassword = ref('')
-const displayPassword = ref('')
-const actualConfirmPassword = ref('')
-const displayConfirmPassword = ref('')
+const formData = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  address: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const formAction = ref({ ...formActionDefault })
 
-let passwordTimeout = null
-let confirmTimeout = null
+const validateForm = () => {
+  const { firstName, lastName, email, phone, address, password, confirmPassword } = formData.value
 
-function handlePasswordInput(newVal) {
-  const oldLength = displayPassword.value.length
-  const newLength = newVal.length
-  if (newLength < oldLength) {
-    actualPassword.value = actualPassword.value.slice(0, newLength)
-  } else {
-    actualPassword.value += newVal[newLength - 1]
+  if (!firstName || !lastName || !email || !phone || !address || !password || !confirmPassword) {
+    formAction.value.formErrorMessage = 'Please complete all fields.'
+    return false
   }
-  displayPassword.value = '•'.repeat(newLength - 1) + actualPassword.value.slice(-1)
-  clearTimeout(passwordTimeout)
-  passwordTimeout = setTimeout(() => {
-    displayPassword.value = '•'.repeat(actualPassword.value.length)
-  }, 1000)
-}
 
-function handleConfirmPasswordInput(newVal) {
-  const oldLength = displayConfirmPassword.value.length
-  const newLength = newVal.length
-  if (newLength < oldLength) {
-    actualConfirmPassword.value = actualConfirmPassword.value.slice(0, newLength)
-  } else {
-    actualConfirmPassword.value += newVal[newLength - 1]
+  if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    formAction.value.formErrorMessage = 'Enter a valid email address.'
+    return false
   }
-  displayConfirmPassword.value = '•'.repeat(newLength - 1) + actualConfirmPassword.value.slice(-1)
-  clearTimeout(confirmTimeout)
-  confirmTimeout = setTimeout(() => {
-    displayConfirmPassword.value = '•'.repeat(actualConfirmPassword.value.length)
-  }, 1000)
+
+  if (!/^\d{11}$/.test(phone)) {
+    formAction.value.formErrorMessage = 'Phone number must be 11 digits.'
+    return false
+  }
+
+  if (password.length < 8) {
+    formAction.value.formErrorMessage = 'Password must be at least 8 characters long.'
+    return false
+  }
+
+  if (password !== confirmPassword) {
+    formAction.value.formErrorMessage = 'Passwords do not match.'
+    return false
+  }
+
+  return true
 }
 
 async function handleRegister() {
   formAction.value = { ...formActionDefault, formProcess: true }
+  formAction.value.formErrorMessage = ''
 
-  if (
-    !firstName.value ||
-    !lastName.value ||
-    !email.value ||
-    !phone.value ||
-    !address.value ||
-    !actualPassword.value ||
-    !actualConfirmPassword.value
-  ) {
-    formAction.value.formErrorMessage = 'Please complete all fields.'
+  if (!validateForm()) {
     formAction.value.formProcess = false
     return
   }
 
-  if (!email.value.includes('@') || !email.value.includes('.com')) {
-    formAction.value.formErrorMessage = 'Enter a valid email address.'
-    formAction.value.formProcess = false
-    return
-  }
-
-  if (!/^\d{11}$/.test(phone.value)) {
-    formAction.value.formErrorMessage = 'Phone number must be 11 digits.'
-    formAction.value.formProcess = false
-    return
-  }
-
-  if (actualPassword.value !== actualConfirmPassword.value) {
-    formAction.value.formErrorMessage = 'Passwords do not match.'
-    formAction.value.formProcess = false
-    return
-  }
-
-  const { error } = await supabase.auth.signUp({
-    email: email.value,
-    password: actualPassword.value,
-    options: {
-      data: {
-        full_name: `${firstName.value} ${lastName.value}`,
-        first_name: firstName.value,
-        last_name: lastName.value,
-        phone: phone.value,
-        address: address.value,
-        role: 'RENTER',
-        photo: null,
+  try {
+    const { error } = await supabase.auth.signUp({
+      email: formData.value.email,
+      password: formData.value.password,
+      options: {
+        data: {
+          full_name: `${formData.value.firstName} ${formData.value.lastName}`,
+          first_name: formData.value.firstName,
+          last_name: formData.value.lastName,
+          phone: formData.value.phone,
+          address: formData.value.address,
+          role: 'RENTER',
+          photo: null,
+        },
       },
-    },
-  })
+    })
 
-  if (error) {
-    formAction.value.formErrorMessage = error.message
+    if (error) throw error
+
+    formAction.value.formSuccessMessage = 'Registration successful! Please verify your email.'
     formAction.value.formProcess = false
-    return
+    router.push('/')
+  } catch (error) {
+    formAction.value.formErrorMessage = error.message || 'An error occurred during registration.'
+    formAction.value.formProcess = false
   }
-
-  formAction.value.formSuccessMessage = 'Registration successful! Please verify your email.'
-  formAction.value.formProcess = false
-  router.push('/')
 }
 </script>
 
@@ -120,41 +96,107 @@ async function handleRegister() {
         <v-row>
           <v-col cols="12" md="6" class="mx-auto">
             <v-card class="mx-auto elevation-24 pa-6">
-              <v-img src="./images/EBlogo.png" :width="300" class="mx-auto mb-4" />
+              <v-img src="@/assets/images/EBlogo.png" :width="300" class="mx-auto mb-4" />
               <h2 class="text-center mb-4">Register to EASY BORROW</h2>
 
               <v-form @submit.prevent="handleRegister">
-                <v-text-field v-model="firstName" label="First Name" />
-                <v-text-field v-model="lastName" label="Last Name" />
-                <v-text-field v-model="email" label="Email" />
-                <v-text-field v-model="phone" label="Phone Number" />
-                <v-text-field v-model="address" label="Address" />
                 <v-text-field
-                  :model-value="displayPassword"
+                  v-model="formData.firstName"
+                  label="First Name"
+                  :rules="[v => !!v || 'First name is required']"
+                  required
+                />
+                <v-text-field
+                  v-model="formData.lastName"
+                  label="Last Name"
+                  :rules="[v => !!v || 'Last name is required']"
+                  required
+                />
+                <v-text-field
+                  v-model="formData.email"
+                  label="Email"
+                  type="email"
+                  :rules="[
+                    v => !!v || 'Email is required',
+                    v => /.+@.+\..+/.test(v) || 'Email must be valid'
+                  ]"
+                  required
+                />
+                <v-text-field
+                  v-model="formData.phone"
+                  label="Phone Number"
+                  :rules="[
+                    v => !!v || 'Phone number is required',
+                    v => /^\d{11}$/.test(v) || 'Phone number must be 11 digits'
+                  ]"
+                  required
+                />
+                <v-text-field
+                  v-model="formData.address"
+                  label="Address"
+                  :rules="[v => !!v || 'Address is required']"
+                  required
+                />
+                <v-text-field
+                  v-model="formData.password"
                   label="Password"
-                  @update:modelValue="handlePasswordInput"
+                  :type="showPassword ? 'text' : 'password'"
+                  :rules="[
+                    v => !!v || 'Password is required',
+                    v => v.length >= 8 || 'Password must be at least 8 characters'
+                  ]"
+                  :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                  @click:append-inner="showPassword = !showPassword"
+                  required
                 />
                 <v-text-field
-                  :model-value="displayConfirmPassword"
+                  v-model="formData.confirmPassword"
                   label="Confirm Password"
-                  @update:modelValue="handleConfirmPasswordInput"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  :rules="[
+                    v => !!v || 'Please confirm your password',
+                    v => v === formData.password || 'Passwords must match'
+                  ]"
+                  :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                  @click:append-inner="showConfirmPassword = !showConfirmPassword"
+                  required
                 />
-                <v-btn :loading="formAction.formProcess" type="submit" block color="yellow-darken-2"
-                  >REGISTER NOW</v-btn
+                <v-btn
+                  :loading="formAction.formProcess"
+                  type="submit"
+                  block
+                  color="yellow-darken-2"
+                  class="mt-4"
                 >
+                  {{ formAction.formProcess ? 'Registering...' : 'REGISTER NOW' }}
+                </v-btn>
               </v-form>
 
-              <v-alert v-if="formAction.formErrorMessage" type="error" class="mt-4">
+              <v-alert
+                v-if="formAction.formErrorMessage"
+                type="error"
+                class="mt-4"
+                closable
+                @click:close="formAction.formErrorMessage = ''"
+              >
                 {{ formAction.formErrorMessage }}
               </v-alert>
-              <v-alert v-if="formAction.formSuccessMessage" type="success" class="mt-4">
+              <v-alert
+                v-if="formAction.formSuccessMessage"
+                type="success"
+                class="mt-4"
+                closable
+                @click:close="formAction.formSuccessMessage = ''"
+              >
                 {{ formAction.formSuccessMessage }}
               </v-alert>
 
               <v-divider class="my-5" />
               <h5 class="text-center">
                 Already have an account?
-                <RouterLink to="/">Click here to LOGIN</RouterLink>
+                <RouterLink to="/" class="text-decoration-none font-weight-bold">
+                  Click here to LOGIN
+                </RouterLink>
               </h5>
             </v-card>
           </v-col>
@@ -165,8 +207,10 @@ async function handleRegister() {
 </template>
 
 <style scoped>
-.account-button {
+.text-decoration-none {
   text-decoration: none;
+}
+.font-weight-bold {
   font-weight: bold;
 }
 </style>

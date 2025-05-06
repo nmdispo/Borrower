@@ -11,6 +11,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
     "@vuepic/vue-datepicker": "^11.0.2",
     "pinia": "^3.0.1",
     "uuid": "^11.1.0",
